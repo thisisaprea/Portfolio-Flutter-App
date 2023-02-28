@@ -1,17 +1,18 @@
-import 'dart:convert';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:duration_picker/duration_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:project_final/pages/bottom_page.dart';
+import 'package:project_final/pages/history_daily.dart';
 import 'package:project_final/services/Api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/last_time.dart';
 import '../widgets/ConsultationCard.dart';
 import 'Profile_User.dart';
 import 'history.dart';
-import 'food_list.dart';
 import 'history_second.dart';
-import 'main_page.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/HomePage';
@@ -28,8 +29,6 @@ class _HomePageState extends State<HomePage> {
   /* var restActivity;
   _HomePageState({required this.restActivity});*/
   var FBS;
-
-
   DateTime dateTime = DateTime.now();
   var dataName;
   var dataFbs;
@@ -37,9 +36,69 @@ class _HomePageState extends State<HomePage> {
   final activityEditingController = new TextEditingController();
   final timeActivityEditingController = new TextEditingController();
   final TimePickerEditingController = new TextEditingController();
-  var sugar;
+  var getsugar;
   var activity;
+  var showAcitivityFood, showAcitivity;
+  var titleActivity, titleFood;
+  var dateFood, dateActivity;
+  var snapshotActivity;
+
+  var MinutesToApi = 0;
+
   late SharedPreferences pref;
+
+  void getActivityUser() async {
+    Api restContent = await new Api();
+    pref = await SharedPreferences.getInstance();
+    String formattedDate = DateFormat('ddMMyyyy').format(dateTime);
+    var restId = await pref.getString("token");
+    var showAcitivity = await restContent.show_activity(restId, formattedDate);
+    setState(() {
+      try {
+        titleActivity = 'คุณ' +
+            showAcitivity['datafood'][0]['nameactivity'] +
+            " เป็นระยะเวลา " +
+            showAcitivity['datafood'][0]['timestamp'].toString() +
+            'นาที';
+        dateActivity = 'วันที่ ' +
+            (showAcitivity['datafood'][0]['datetime']).substring(0, 11) +
+            ' เวลา ' +
+            (showAcitivity['datafood'][0]['datetime']).substring(
+                11, showAcitivity['datafood'][0]['datetime'].length) +
+            ' น.';
+      } catch (e) {
+        titleActivity = 'คุณยังไม่มีการออกกำลังกายวันนี้';
+        dateActivity = "";
+      }
+      this.showAcitivity = showAcitivity;
+    });
+  }
+
+  void getFoodUser() async {
+    Api restContent = await new Api();
+    pref = await SharedPreferences.getInstance();
+    String formattedDate = DateFormat('ddMMyyyy').format(dateTime);
+    var restId = await pref.getString("token");
+    var showAcitivityFood = await restContent.show_food(restId, formattedDate);
+    setState(() {
+      try {
+        titleFood = 'มื้อ' +
+            showAcitivityFood['datafood'][0]['meal'] +
+            " ทาน" +
+            showAcitivityFood['datafood'][0]['nameactivity'];
+        dateFood = 'วันที่ ' +
+            (showAcitivityFood['datafood'][0]['datetime']).substring(0, 11) +
+            ' เวลา ' +
+            (showAcitivityFood['datafood'][0]['datetime']).substring(
+                11, showAcitivityFood['datafood'][0]['datetime'].length) +
+            ' น.';
+      } catch (e) {
+        titleFood = 'คุณยังไม่การเพิ่มการกินวันนี้';
+        dateFood = '';
+      }
+      this.showAcitivityFood = showAcitivityFood;
+    });
+  }
 
   void getdataActivity() async {
     Api restActivity = new Api();
@@ -49,13 +108,26 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void getdataUser() async {
+  void getSugar() async {
+    pref = await SharedPreferences.getInstance();
+    var restId = await pref.getString("token");
+    Api restSugar = new Api();
+    String formattedDate = DateFormat('ddMMyyyy').format(dateTime);
+    var restsugar = await restSugar.get_sugar(await restId, formattedDate);
+    print('//////////////////////////////////////');
+    print(id_user);
+    print(restsugar);
+    print('//////////////////////////////////////');
+    setState(() {
+      getsugar = restsugar;
+    });
+  }
 
+  void getdataUser() async {
     pref = await SharedPreferences.getInstance();
     var restData = await pref.getString("firstname");
     var restData2 = await pref.getString("FBS");
     var restId = await pref.getString("token");
-
     setState(() {
       dataName = restData;
       dataFbs = restData2;
@@ -63,12 +135,14 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-
   @override
   void initState() {
     super.initState();
     getdataUser();
     getdataActivity();
+    getSugar();
+    getActivityUser();
+    getFoodUser();
   }
 
   @override
@@ -86,57 +160,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final activity_field = DropdownButtonFormField(
-      validator: (value) => value == null ? "กรุณาเลือกกิจกรรม" : null,
-      onChanged: (String? newValue) {
-        setState(() {
-          activityEditingController.text = newValue!;
-        });
-      },
-      items: activity.map<DropdownMenuItem<String>>(
-        (String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        },
-      ).toList(),
-      decoration: InputDecoration(
-        prefixIcon: Icon(Icons.sports_volleyball),
-        contentPadding: EdgeInsets.fromLTRB(10, 15, 10, 15),
-        hintText: "กิจกรรม",
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        //textInputAction: TextInputAction.next,
-      ),
-    );
-
-    final timeToActivity_Field = TextFormField(
-        autofocus: false,
-        controller: timeActivityEditingController,
-        keyboardType: TextInputType.number,
-        validator: (value) {
-          if (value!.isEmpty) {
-            return ("กรุณาใส่ค่าน้ำตาลในเลือด");
-          }
-          return null;
-        },
-        onSaved: (value) {
-          timeActivityEditingController.text = value!;
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          prefixIcon: Icon(Icons.timer),
-          contentPadding: EdgeInsets.fromLTRB(10, 15, 10, 15),
-          hintText: "เวลาที่ออกกำลังกาย",
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ));
-
     return Scaffold(
-      backgroundColor: Colors.green.shade100,
+      backgroundColor: Colors.white54,
       floatingActionButton: SizedBox(
         width: 75,
         height: 75,
@@ -159,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height / 7,
                 decoration: BoxDecoration(
-                  color: Colors.white60,
+                  color: Colors.green.shade400,
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(20),
                       bottomRight: Radius.circular(20)),
@@ -173,7 +198,6 @@ class _HomePageState extends State<HomePage> {
                         ),
                         InkWell(
                           onTap: () async {
-
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -217,13 +241,37 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(height: 20),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
                 child: Row(
                   children: [
-                    ConsultCard(
-                        name: 'น้ำตาลที่กินได้ต่อวันคงเหลือ',
-                        color: Colors.deepOrange.shade200,
-                        title: '$sugar'),
+                    InkWell(
+                      onTap: () async {
+                        Api restContent = await new Api();
+                        pref = await SharedPreferences.getInstance();
+                        String formattedDate =
+                            DateFormat('dd/MM/yyyy').format(dateTime);
+                        var restId = await pref.getString("token");
+                        var showAcitivityFood = await restContent.get_history(
+                            restId, formattedDate, formattedDate);
+                        //print(showAcitivityFood['data_history'][0]);
+                        var listHistory;
+
+                        try {
+                          listHistory = showAcitivityFood['data_history'][0];
+                        } catch (e) {
+                          listHistory = [];
+                        };
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => history_daily(
+                                    restListActivity: listHistory)));
+                      },
+                      child: ConsultCard(
+                          name: 'น้ำตาลที่กินได้ต่อวันคงเหลือ',
+                          color: Colors.deepOrange.shade200,
+                          title: getsugar['sugar']['sugar'].toStringAsFixed(2) + ' กรัม'),
+                    ),
                     SizedBox(
                       width: 10,
                     ),
@@ -241,7 +289,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         child: Padding(
                           padding:
-                              EdgeInsets.only(top: 24, left: 24, right: 24),
+                              EdgeInsets.only(top: 24, left: 18, right: 12),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -257,12 +305,15 @@ class _HomePageState extends State<HomePage> {
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 10,
+                                          fontSize: 13,
                                         ),
                                       ),
                                     ],
                                   ),
                                 ],
+                              ),
+                              SizedBox(
+                                height: 5,
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -330,17 +381,23 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               InkWell(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => report_static()));
+                onTap: () async {
+                  print(showAcitivity);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => report_static(
+                                restListActivity: showAcitivity['datafood'],
+                                title: 'การออกกำลังกาย',
+                              )));
                 },
                 child: Padding(
                   padding: EdgeInsets.only(top: 24, left: 10, right: 10),
                   child: Container(
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height / 5,
+                    height: MediaQuery.of(context).size.height / 3.5,
                     decoration: BoxDecoration(
-                      color: Colors.green.shade600,
+                      color: Colors.yellow.shade400,
                       borderRadius: BorderRadius.all(
                         Radius.circular(20),
                       ),
@@ -361,17 +418,23 @@ class _HomePageState extends State<HomePage> {
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 20,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
                                   Text(
-                                    '${activityEditingController.text}',
+                                    titleActivity,
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 30,
+                                      fontSize: 20.0,
+                                    ),
+                                  ),
+                                  Text(
+                                    dateActivity,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
                                     ),
                                   ),
                                   SizedBox(
@@ -381,39 +444,7 @@ class _HomePageState extends State<HomePage> {
                                     onPressed: () => showDialog(
                                       context: context,
                                       builder: (BuildContext context) =>
-                                          AlertDialog(
-                                        title: Text('กิจกรรม'),
-                                        content: Container(
-                                          width: double.infinity,
-                                          height: 125,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                activity_field,
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-                                                timeToActivity_Field,
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        actions: [
-                                          activitySaveButton(context),
-
-                                          TextButton(
-                                            onPressed: () => Navigator.pop(
-                                                context, 'Cancel'),
-                                            child: const Text('Cancel'),
-                                          ),
-                                        ],
-                                      ),
+                                          alertFilActivity(context),
                                     ),
                                     style: ButtonStyle(
                                       foregroundColor:
@@ -439,16 +470,6 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                               SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                '${timeActivityEditingController.text}',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 30.0,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
                                 height: 50,
                               ),
                             ],
@@ -461,15 +482,20 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               InkWell(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => report_static()));
+                onTap: () async {
+                  print(showAcitivityFood);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => report_static(
+                              restListActivity: showAcitivityFood['datafood'],
+                              title: 'การกิน')));
                 },
                 child: Padding(
                   padding: EdgeInsets.only(top: 24, left: 10, right: 10),
                   child: Container(
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height / 5,
+                    height: MediaQuery.of(context).size.height / 3.5,
                     decoration: BoxDecoration(
                       color: Colors.blueAccent.shade100,
                       borderRadius: BorderRadius.all(
@@ -491,11 +517,19 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Text(
-                            'มื้อเย็น สุกี้หมูแห้ง 1 จาน',
+                            titleFood,
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
                               fontSize: 30.0,
+                            ),
+                          ),
+                          Text(
+                            dateFood,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
                             ),
                           ),
                         ],
@@ -504,7 +538,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              InkWell(
+              SizedBox(
+                height: 30,
+              ),
+              /*InkWell(
                 onTap: () {
                   Navigator.push(
                       context,
@@ -543,17 +580,115 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-              ),
+              ),*/
             ],
           ),
         ),
       ),
     );
   }
-  Widget activitySaveButton(BuildContext context) {
+
+  Widget alertFilActivity(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      title: Text(
+        'เพิ่มการทำกิจกรรม',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+      ),
+      buttonPadding: const EdgeInsets.only(right: 24),
+      elevation: 24.0,
+      content: Form(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            activity_field(),
+            SizedBox(height: 10),
+            timeToActivity_Field(),
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        cancelButton(context),
+        addButton(context),
+      ],
+    );
+  }
+
+  Widget activity_field() {
+    return DropdownButtonFormField(
+      validator: (value) => value == null ? "กรุณาเลือกกิจกรรม" : null,
+      onChanged: (String? newValue) {
+        setState(() {
+          activityEditingController.text = newValue!;
+        });
+      },
+      items: activity.map<DropdownMenuItem<String>>(
+        (String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        },
+      ).toList(),
+      decoration: InputDecoration(
+        prefixIcon: Icon(Icons.sports_volleyball),
+        contentPadding: EdgeInsets.fromLTRB(20, 5, 5, 10),
+        hintText: "กิจกรรม",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        //textInputAction: TextInputAction.next,
+      ),
+    );
+  }
+  Widget timeToActivity_Field() {
+    return TextField(
+      autofocus: false,
+      controller: timeActivityEditingController,
+      decoration: InputDecoration(
+        labelText: 'กรุณาใส่เวลา',
+        prefixIcon: Icon(Icons.calendar_today_outlined),
+        contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+        hintText: "ระยะเวลาในการออกกำลังกาย",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      readOnly: true,
+      onTap: () async {
+        Duration? pickedDate = (await showDurationPicker(
+          context: context,
+          initialTime: Duration(minutes: 10),
+        ));
+        if (pickedDate != null) {
+          print(pickedDate.inMinutes);
+          MinutesToApi = pickedDate.inMinutes;
+          print(pickedDate.toString().substring(0,4));
+          timeActivityEditingController.text = pickedDate.toString().substring(0,4);
+
+        } else {}
+      },
+    );
+  }
+
+  Widget cancelButton(BuildContext context) {
     return ElevatedButton(
-      onPressed: () async{
-        String formattedDateTime = DateFormat('dd/MM/yyyy H:m:s').format(dateTime);
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+      child: Text('Cancel'),
+      style: ElevatedButton.styleFrom(
+          primary: Colors.black.withOpacity(0.8),
+          textStyle: TextStyle(fontWeight: FontWeight.bold)),
+    );
+  }
+
+  Widget addButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () async {
+        String formattedDateTime =
+            DateFormat('dd/MM/yyyy H:m:s').format(dateTime);
         String formattedDate = DateFormat('ddMMyyyy').format(dateTime);
         final activityName = activityEditingController.text;
         final activityTime = timeActivityEditingController.text;
@@ -562,16 +697,35 @@ class _HomePageState extends State<HomePage> {
         print('timeAc $activityTime');
         print('timeDate Event $formattedDateTime');
         print('timeDate Event Format $formattedDate');
-        Api setDataToApi = await new Api();
-        var setData = await setDataToApi.add_activityinput(id_user, formattedDate, formattedDateTime, activityName, activityTime);
-        if(await setData["message"] == 'success'){
-          sugar = await setDataToApi.get_sugar(id_user, formattedDate);
-          print('น้ำตาล ${sugar['sugar']['sugar']}');
-          //Navigator.of(context).pop();
-          Navigator.pop(context, 'OK');
-        } //เค้ก
+        print(MinutesToApi);
+        if(MinutesToApi > 0 && activityName != ''){
+          Api setDataToApi = await new Api();
+          var setData = await setDataToApi.add_activityinput(id_user,
+              formattedDate, formattedDateTime, activityName, MinutesToApi.toString());
+          if (await setData["message"] == 'success') {
+            //Navigator.of(context).pop();
+            MaterialPageRoute materialPageRoute = MaterialPageRoute(
+                builder: (BuildContext context) => Bottom_Pages());
+            Navigator.of(this.context).push(materialPageRoute);
+          }
+        }else{
+          AwesomeDialog(
+            context: context,
+            dialogType: DialogType.warning,
+            animType: AnimType.topSlide,
+            showCloseIcon: true,
+            headerAnimationLoop: false,
+            title: 'Warning',
+            desc: 'กรุณาใส่ข้อมูลให้ครบ',
+            btnOkOnPress: () {
+            },
+          ).show();
+        }
       },
-      child: const Text('OK'),);
+      child: Text('Add'),
+      style: ElevatedButton.styleFrom(
+          primary: Colors.green,
+          textStyle: TextStyle(fontWeight: FontWeight.bold)),
+    );
   }
-
 }

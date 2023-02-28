@@ -1,11 +1,12 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:project_final/pages/food_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/Api.dart';
 import '../services/last_time.dart';
+import 'bottom_page.dart';
 
 class history_second extends StatefulWidget {
   static const routeName = '/history_second';
@@ -36,13 +37,13 @@ class _history_secondState extends State<history_second> {
 
   ];
   var id_user;
+
   void getdataUser() async {
     pref = await SharedPreferences.getInstance();
     var restId = await pref.getString("token");
 
     setState(() {
       id_user = restId;
-
     });
   }
 
@@ -117,7 +118,7 @@ class _history_secondState extends State<history_second> {
               });
             },
             items: categoryItems.map<DropdownMenuItem<String>>(
-              (String value) {
+                  (String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
@@ -149,7 +150,7 @@ class _history_secondState extends State<history_second> {
             });
           },
           items: listFood.map<DropdownMenuItem<String>>(
-            (String value) {
+                (String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),
@@ -163,8 +164,8 @@ class _history_secondState extends State<history_second> {
           searchController: foodController,
           searchInnerWidget: Padding(
             padding: EdgeInsets.only(
-              top: 15,
-              bottom: 10,
+              top: 10,
+              bottom: 5,
               right: 15,
               left: 15,
             ),
@@ -251,7 +252,7 @@ class _history_secondState extends State<history_second> {
       onPressed: () {
         AlertDialog(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           title: Text(
             'พูดได้เลย',
             textAlign: TextAlign.center,
@@ -281,36 +282,52 @@ class _history_secondState extends State<history_second> {
       onPressed: () async {
         final food = foodController.text;
         final mealtime = mealAmountController.text;
-        String formattedDateTime = DateFormat('dd/MM/yyyy H:m:s').format(dateLast);
+        String formattedDateTime = DateFormat('dd/MM/yyyy H:m:s').format(
+            dateLast);
         String formattedDate = DateFormat('ddMMyyyy').format(dateLast);
         print('food name $food');
-        print('cateogry $_selectedCategory');
+        print('cateogry $mealController.text');
         print('meal amount $mealtime');
+        print(mealAmountController.text);
         print('Datetime $formattedDateTime');
         print('Datetime $formattedDate');
-        Api setDataToApi = await new Api();
-        var setData = await setDataToApi.add_foodinput(id_user, formattedDate, formattedDateTime, food, mealtime, _selectedCategory);
-        if(await setData["message"] == 'success'){
-          //Navigator.of(context).pop();
-          //var getLastmeal = await setDataToApi.show_food(id_user, formattedDate)
-          var suGar = await setDataToApi.get_sugar(id_user, formattedDate);
+        if (food != '' && mealController != '' && mealtime != '') {
+          Api setDataToApi = await new Api();
+          var setData = await setDataToApi.add_foodinput(
+              id_user, formattedDate, formattedDateTime, food, mealtime,
+              mealController.text);
+          if (await setData["message"] == 'success') {
+            //Navigator.of(context).pop();
+            //var getLastmeal = await setDataToApi.show_food(id_user, formattedDate)
+            /*var suGar = await setDataToApi.get_sugar(id_user, formattedDate);
           print('น้ำตาล ${suGar['sugar']['sugar']}');
           var callContentbased = await setDataToApi.get_contentbased(id_user, formattedDate);
           if(await callContentbased["message"] == 'success'){
             print("------------------------------------------");
-            print(callContentbased["datauser"]);
+            print(callContentbased["datauser"]);*/
 
             print("------------------------------------------");
             ///////push to next page///
             MaterialPageRoute materialPageRoute = MaterialPageRoute(
-                builder: (BuildContext context) => ItemList());
+                builder: (BuildContext context) => Bottom_Pages());
             Navigator.of(this.context).push(materialPageRoute);
           }
-        }
-        //widget.onFinish(food, _selectedCategory, mealtime);
-
-       
+        } else {
+          AwesomeDialog(
+            context: context,
+            dialogType: DialogType.warning,
+            animType: AnimType.topSlide,
+            showCloseIcon: true,
+            headerAnimationLoop: false,
+            title: 'Warning',
+            desc: 'กรุณากรอกชื่ออาหาร หรือมื้ออาหาร และจำนวนอาหาร',
+            btnOkOnPress: () {},
+          ).show();
+        };
       },
+      //widget.onFinish(food, _selectedCategory, mealtime);
+
+
       style: ElevatedButton.styleFrom(
           primary: Colors.green,
           textStyle: TextStyle(fontWeight: FontWeight.bold)),

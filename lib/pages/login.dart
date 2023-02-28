@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_final/controller/check_User.dart';
@@ -129,10 +130,31 @@ class _login_pageState extends State<login_page> {
                 pref.setString("statusLogin", login["datauser"]["statuslogin"]);
                 pref.setString("FBS", login["datauser"]["FBS"]);
                 pref.setString("deviceLogin", login["datauser"]["devicelogin"]);
-
-                
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => Bottom_Pages()));
+              } else if(await login['message'] == "Verified false"){
+                await AwesomeDialog(
+                  context: context,
+                  dialogType: DialogType.info,
+                  animType: AnimType.topSlide,
+                  showCloseIcon: true,
+                  headerAnimationLoop: false,
+                  title: 'E-mail Verified',
+                  desc: 'กรุณายืนยัน E-mail เพื่อเข้าสู่ระบบ',
+                  btnOkOnPress: () {},
+                ).show();
+              }else{
+                await AwesomeDialog(
+                  context: context,
+                  dialogType: DialogType.warning,
+                  animType: AnimType.topSlide,
+                  showCloseIcon: true,
+                  headerAnimationLoop: false,
+                  title: 'Login Failed',
+                  desc: 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง',
+                  btnOkColor: Colors.blueAccent.shade200,
+                  btnOkOnPress: () {},
+                ).show();
               }
               print("------------------------------------------");
               print(pref.getString('firstname'));
@@ -237,5 +259,19 @@ class _login_pageState extends State<login_page> {
       isHiddenPassword = !isHiddenPassword;
     });
   }
+  /*void resendVerify(){
+    GestureDetector(
+      onTap: () async{
+        Api apiRest = new Api();
+        var verify = apiRest.se
+      },
+      child: Text(
+        "รับ E-mail ยืนยันอีกครั้ง",
+        style: TextStyle(
+            color: Colors.blueAccent,
+            fontWeight: FontWeight.bold,
+            fontSize: 15),
+      ),
+    )*/
+  }
 
-}

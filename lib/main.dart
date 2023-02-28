@@ -6,8 +6,9 @@ import 'package:project_final/pages/login.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences perfs = await SharedPreferences.getInstance();
-  var status_login = await perfs.getString("login_Status") ?? "False";
-  runApp(MyApp(status_login: status_login));
+  var status_login = await perfs.getString("statusLogin") ?? "False";
+
+  runApp(MyApp(status_login: await status_login));
 
   //runApp(const MyApp());
 }

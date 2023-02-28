@@ -4,66 +4,85 @@ import 'package:project_final/pages/history_daily.dart';
 
 class report_static extends StatefulWidget {
   static const routeName = '/History';
-
-  const report_static({Key? key}) : super(key: key);
+  var restListActivity;
+  var title;
+  report_static({required this.restListActivity,required this.title});
+  //const report_static({Key? key}) : super(key: key);
 
   @override
-  _report_staticState createState() => _report_staticState();
+  _report_staticState createState() => _report_staticState(restListActivity: this.restListActivity, title: this.title);
 }
 
 class _report_staticState extends State<report_static> {
-  int number = 1;
+  var restListActivity;
+  var title;
+  _report_staticState({required this.restListActivity,required this.title});
+  var subText, titleText;
+  @override
+  void initState() {
+    super.initState();
+    for(var i in restListActivity){
+      number = number + 1;
+    }
+
+  }
+
+  int number = 0;
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueAccent.shade200,
-        title: const Text("ประวัติการกิน"),
+        title: Text("ประวัติ"+ title.toString()),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
             child: Column(
               children: [
-                OutlinedButton(
+                /*OutlinedButton(
                   onPressed: () {
                     setState(() {
                       number = number + 1;
                     });
                   },
                   child: Text('add'),
-                ),
+                ),*/
                 ListView.builder(
                   physics: ScrollPhysics(parent: null),
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: (){
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => history_daily()));
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(bottom: 8),
-                        padding:EdgeInsets.only(top: 15, left: 10, right: 10),
-                        decoration: BoxDecoration(
-                          color: Colors.blueAccent.shade100,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
+                    if(title == 'การกิน'){
+                      titleText = restListActivity[index]['nameactivity'];
+                      subText = 'มื้อที่กิน : '+restListActivity[index]['meal'] + " จำนวน : "
+                          +restListActivity[index]['amount']+' น้ำตาล : '+restListActivity[index]['sugar'].toStringAsFixed(2)+'\nวันที่ '+(restListActivity[index]['datetime']).substring(0,11)
+                      +' เวลา '+ (restListActivity[index]['datetime']).substring(11,restListActivity[index]['datetime'].length)+' น.';
+                    }else{
+                      titleText = restListActivity[index]['nameactivity'];
+                      subText = 'ระยะเวลาออกกำลังกาย : '+restListActivity[index]['timestamp'] +' น้ำตาล : '+restListActivity[index]['sugar'].toStringAsFixed(2)+'\nวันที่ '+(restListActivity[index]['datetime']).substring(0,11)
+                          +' เวลา '+ (restListActivity[index]['datetime']).substring(11,restListActivity[index]['datetime'].length)+' น.';
+                    }
+                    return Container(
+                      margin: EdgeInsets.only(bottom: 8),
+                      padding:EdgeInsets.only(top: 15, left: 10, right: 10),
+                      decoration:BoxDecoration(
+                        color: Colors.blueAccent.shade100,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20),
                         ),
-
-                        child: ListTile(
-                          trailing: Icon(Icons.person_add_alt_1_outlined),
-                          title: Text("histiry today"),
-                          subtitle: Text('24/02/2023'),
-                          leading: Icon(Icons.add),
-                        ),
-
                       ),
+
+                      child: ListTile(
+
+                        trailing: Icon(Icons.person_add_alt_1_outlined),
+                        title: Text(titleText),
+                        subtitle: Text(subText),
+                        leading: Icon(Icons.add),
+                      ),
+
                     );
+
                   },
                   itemCount: number,
 

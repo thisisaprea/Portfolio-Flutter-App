@@ -1,21 +1,13 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:multiple_search_selection/multiple_search_selection.dart';
-import 'package:project_final/pages/Food_Rec.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../services/Api.dart';
-import '../services/last_time.dart';
-import 'FriendTextFields.dart';
-import 'history_second.dart';
-
 class ItemList extends StatefulWidget {
   static const routeName = '/FoodItem';
 
-  const ItemList({Key? key}) : super(key: key);
+
+  ItemList({Key? key}) : super(key: key);
 
   @override
   _ItemListState createState() => _ItemListState();
@@ -24,127 +16,72 @@ class ItemList extends StatefulWidget {
 class _ItemListState extends State<ItemList> {
   var pref;
   var id_user;
+  var dateTime;
+  var showContentbasedFood;
+  var titleActivity, titleFood;
+  var dateFood, dateActivity;
+
   void getdataUser() async {
+    Api restContent = await new Api();
     pref = await SharedPreferences.getInstance();
+    String formattedDate = DateFormat('ddMMyyyy').format(dateTime);
     var restId = await pref.getString("token");
-
+    var showContentbasedFood =
+        await restContent.get_contentbased(restId, formattedDate);
     setState(() {
-      id_user = restId;
-
+      print(showContentbasedFood);
+        titleFood = showContentbasedFood['datauser']['ชื่อเมนู'] +
+            showContentbasedFood['datauser']['น้ำตาล'];
+        this.showContentbasedFood = showContentbasedFood;
     });
   }
+
+  var number = 0;
 
   @override
   void initState() {
     super.initState();
+    for (var i in showContentbasedFood) {
+      number = number + 1;
+    }
     getdataUser();
   }
 
   @override
-  Future addLastTime(String food, String category) async {
-    final lastTime = LastTime()
-      ..food = food
-      ..category = category
-      ..createdDate = DateTime.now()
-      ..timeStamp.add(DateTime.now());
-
-    final box = Hive.box<LastTime>('lastTimes');
-    box.add(lastTime);
-    print('$box, $lastTime');
-  }
-
   Widget build(BuildContext context) {
-    /*final listview_field = StreamBuilder(stream: FirebaseFirestore.instance
-        .collection('food_info')
-        .snapshots(),
-        builder: (context, snapshot) {
-          if(!snapshot.hasData){
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          return Container(
-            child: ListView(
-                children: snapshot.data!.docs.map((snap){
-                  return Card(
-                    child: ListTile(
-                      title: Text(snap.data()['Menu']),
-
-                    ),
-                  );
-                }).toList()
-            ),
-          );
-        });
-*/
     return Scaffold(
-      /*floatingActionButton: SizedBox(
-        width: 75,
-        height: 75,
-        child: FittedBox(
-          child: FloatingActionButton(
-            backgroundColor: Colors.green.shade400,
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => history_second(onFinish: addLastTime),
-            ),
-            child: Icon(Icons.add),
-          ),
-        ),
-      ),*/
       appBar: AppBar(
           title: Text('มื้ออาหารถัดไป'),
           backgroundColor: Colors.deepOrange.shade400),
       body: SafeArea(
         child: Column(
           children: [
-
+            ListView.builder(
+              physics: ScrollPhysics(parent: null),
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return Container(
+                  margin: EdgeInsets.only(bottom: 8),
+                  padding: EdgeInsets.only(top: 15, left: 10, right: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.blueAccent.shade100,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20),
+                    ),
+                  ),
+                  child: ListTile(
+                    trailing: Icon(Icons.person_add_alt_1_outlined),
+                    title: Text(titleFood),
+                    //subtitle: Text(subText),
+                    leading: Icon(Icons.add),
+                  ),
+                );
+              },
+              itemCount: number,
+            ),
           ],
         ),
       ),
     );
   }
-  /*List<Widget> _getFriends(){
-    List<Widget> friendsTextFields = [];
-    for(int i=0; i<friendsList.length; i++){
-      friendsTextFields.add(
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Row(
-              children: [
-                Expanded(child: FriendTextFields(i)),
-                SizedBox(width: 16,),
-                // we need add button at last friends row
-                _addRemoveButton(i == friendsList.length-1, i),
-              ],
-            ),
-          )
-      );
-    }
-    return friendsTextFields;
-  }
-
-  /// add / remove button
-  Widget _addRemoveButton(bool add, int index){
-    return InkWell(
-      onTap: (){
-        if(add){
-          // add new text-fields at the top of all friends textfields
-          friendsList.insert(0, "");
-        }
-        else friendsList.removeAt(index);
-        setState((){});
-      },
-      child: Container(
-        width: 30,
-        height: 30,
-        decoration: BoxDecoration(
-          color: (add) ? Colors.green : Colors.red,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Icon((add) ? Icons.add : Icons.remove, color: Colors.white,),
-      ),
-    );
-  }*/
 }
-

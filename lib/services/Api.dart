@@ -1,7 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -70,6 +67,7 @@ class Api {
       }
     }
   }
+
   Logout(tokenID) async {
     final http.Response response = await http.post(
       Uri.parse("http://10.0.2.2:8000/logout/"),
@@ -232,7 +230,7 @@ class Api {
       throw Exception('Not Found');
     }
   }
-  show_activity(tokenID, dataformat) async {
+  show_activity(tokenID, dateformat) async {
     final http.Response response = await http.post(
       Uri.parse("http://10.0.2.2:8000/show_activity/"),
       headers: <String, String>{
@@ -240,7 +238,7 @@ class Api {
       },
       body: jsonEncode(<String, String>{
         'uid': await tokenID,
-        'dataformat' : await dataformat
+        'dateformat' : await dateformat
       }),
     );
     if (response.statusCode == 200) {
@@ -252,7 +250,7 @@ class Api {
   }
   get_history(tokenID, stringdatestart, stringdateend) async {
     final http.Response response = await http.post(
-      Uri.parse("http://10.0.2.2:8000/show_activity/"),
+      Uri.parse("http://10.0.2.2:8000/get_history/"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

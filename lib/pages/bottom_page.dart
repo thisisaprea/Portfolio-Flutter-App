@@ -9,6 +9,8 @@ import '../controller/user_model.dart';
 import 'HomePage.dart';
 import 'Profile_User.dart';
 import 'food_list.dart';
+import 'history_daily.dart';
+import 'history_days.dart';
 import 'history_first.dart';
 
 
@@ -28,7 +30,7 @@ class _Bottom_PagesState extends State<Bottom_Pages> {
   final screens = [
     HomePage(),
     ItemList(),
-    report_static(),
+    history_today(),
     profile_user(),
   ];
 
@@ -49,19 +51,20 @@ class _Bottom_PagesState extends State<Bottom_Pages> {
           BottomNavigationBarItem(
               icon: Icon(Icons.home_max_outlined),
               label: 'หน้าหลัก',
-              backgroundColor: Colors.green.shade400),
+              backgroundColor: Colors.green.shade400,
+              ),
           BottomNavigationBarItem(
               icon: Icon(Icons.food_bank_outlined),
               label: 'มื้ออาหาร',
-              backgroundColor: Colors.deepOrange.shade400),
+            backgroundColor: Colors.green.shade400,),
           BottomNavigationBarItem(
               icon: Icon(Icons.auto_graph_outlined),
               label: 'รายงาน',
-              backgroundColor: Colors.blueAccent.shade200),
+            backgroundColor: Colors.green.shade400,),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle_outlined),
             label: 'โปรไฟล์',
-            backgroundColor: Colors.deepPurple.shade400,
+            backgroundColor: Colors.green.shade400,
           ),
         ],
         currentIndex: _selectedIndex,

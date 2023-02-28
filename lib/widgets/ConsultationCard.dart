@@ -23,29 +23,33 @@ class ConsultCard extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.only(top: 24, left: 24, right: 24),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+
                       Text(
                         name,
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
-                          fontSize: 10,
+                          fontSize: 15,
                         ),
                       ),
                     ],
                   ),
                 ],
               ),
-
+              SizedBox(
+                height: 10,
+              ),
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     title,

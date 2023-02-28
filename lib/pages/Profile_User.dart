@@ -1,9 +1,11 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../controller/check_User.dart';
-import '../widgets/alrert_dialog.dart';
 import 'login.dart';
 
 class profile_user extends StatefulWidget {
@@ -73,12 +75,24 @@ class _profile_userState extends State<profile_user> {
       child: MaterialButton(
           padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
-          onPressed: () async{
-            check_user checkuse = new check_user();
-            await checkuse.logout();
-            MaterialPageRoute materialPageRoute = MaterialPageRoute(
-                builder: (BuildContext context) => login_page());
-            Navigator.of(this.context).push(materialPageRoute);
+          onPressed: () {
+            AwesomeDialog(
+              context: context,
+              dialogType: DialogType.warning,
+              animType: AnimType.topSlide,
+              showCloseIcon: true,
+              headerAnimationLoop: false,
+              title: 'Logout',
+              desc: 'Are you sure',
+              btnCancelOnPress: (){},
+              btnOkOnPress: () async{
+                check_user checkuse = new check_user();
+                await checkuse.logout();
+                MaterialPageRoute materialPageRoute = MaterialPageRoute(
+                    builder: (BuildContext context) => login_page());
+                Navigator.of(this.context).push(materialPageRoute);
+              },
+            ).show();
           },
           child: Text(
             "ออกจากระบบ",
@@ -149,7 +163,7 @@ class _profile_userState extends State<profile_user> {
                       ),
                     ),
                   ),
-                  logoutButton
+                  logoutButton,
                 ],
               ),
               SizedBox(
@@ -162,6 +176,5 @@ class _profile_userState extends State<profile_user> {
     );
 
   }
-
 
 }

@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:date_field/date_field.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -569,15 +570,18 @@ class _Register_screenState extends State<Register_screen> {
                 listfood.toString());
 
             if (await signup['message'] == "Signup Finishes") {
-              await showDialog<String>(
+              await AwesomeDialog(
                 context: context,
-                builder: (BuildContext context) => AlertDialog(
-                  title:
-                      Text('กรุณายืนยัน E-mail เพื่อการสมัครสมาชิกที่สมบูรณ์'),
-                ),
-              );
-              print("------------------------------------------");
-              ///////pop up บอกกรุณายืนยัน Email///
+                dialogType: DialogType.info,
+                animType: AnimType.topSlide,
+                showCloseIcon: true,
+                headerAnimationLoop: false,
+                title: 'Warning',
+                desc: 'กรุณายืนยัน E-mail เพื่อการสมัครสมาชิกที่สมบูรณ์',
+                btnOkOnPress: () {
+                },
+              ).show();
+              print("------------------pop up บอกกรุณายืนยัน Email------------------------");
               MaterialPageRoute materialPageRoute = MaterialPageRoute(
                   builder: (BuildContext context) => login_page());
               Navigator.of(this.context).push(materialPageRoute);
