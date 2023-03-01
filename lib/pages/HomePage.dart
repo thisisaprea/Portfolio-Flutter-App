@@ -42,11 +42,15 @@ class _HomePageState extends State<HomePage> {
   var titleActivity, titleFood;
   var dateFood, dateActivity;
   var snapshotActivity;
-
   var MinutesToApi = 0;
-
+  var sugarValue = 8.0;
   late SharedPreferences pref;
-
+  String? dateStart;
+  void setDateStart(){
+    setState(() {
+      dateStart = '18/02/2023';
+    });
+  }
   void getActivityUser() async {
     Api restContent = await new Api();
     pref = await SharedPreferences.getInstance();
@@ -56,10 +60,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       try {
         titleActivity = 'คุณ' +
-            showAcitivity['datafood'][0]['nameactivity'] +
-            " เป็นระยะเวลา " +
-            showAcitivity['datafood'][0]['timestamp'].toString() +
-            'นาที';
+            showAcitivity['datafood'][0]['nameactivity'] + "\nระยะเวลา " + showAcitivity['datafood'][0]['timestamp'].toString() + ' นาที';
         dateActivity = 'วันที่ ' +
             (showAcitivity['datafood'][0]['datetime']).substring(0, 11) +
             ' เวลา ' +
@@ -109,6 +110,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getSugar() async {
+
     pref = await SharedPreferences.getInstance();
     var restId = await pref.getString("token");
     Api restSugar = new Api();
@@ -120,6 +122,12 @@ class _HomePageState extends State<HomePage> {
     print('//////////////////////////////////////');
     setState(() {
       getsugar = restsugar;
+      sugarValue = sugarValue - getsugar['sugar']['sugar'];
+      if(sugarValue <= 0){
+        sugarValue = 0.0;
+      }
+
+      print(getsugar['sugar']['sugar']);
     });
   }
 
@@ -143,6 +151,7 @@ class _HomePageState extends State<HomePage> {
     getSugar();
     getActivityUser();
     getFoodUser();
+    setDateStart();
   }
 
   @override
@@ -270,7 +279,8 @@ class _HomePageState extends State<HomePage> {
                       child: ConsultCard(
                           name: 'น้ำตาลที่กินได้ต่อวันคงเหลือ',
                           color: Colors.deepOrange.shade200,
-                          title: getsugar['sugar']['sugar'].toStringAsFixed(2) + ' กรัม'),
+                          title: getsugar['sugar']['sugar'].toStringAsFixed(2) + ' กรัม'
+                              + '\n'+'น้ำตาลที่เหลือ'+'\n'+sugarValue.toStringAsFixed(2) + ' กรัม'),
                     ),
                     SizedBox(
                       width: 10,

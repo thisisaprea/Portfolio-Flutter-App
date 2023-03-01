@@ -13,7 +13,7 @@ class ConsultCard extends StatelessWidget {
       fit: FlexFit.tight,
       child: Container(
         //width: 220,
-        height: 130,
+        height: 200,
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.all(

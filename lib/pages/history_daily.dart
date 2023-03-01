@@ -18,7 +18,7 @@ class history_daily extends StatefulWidget {
 class _history_dailyState extends State<history_daily> {
   var restListActivity;
   var title = 'ประวัติกิจกรรมของวันนี้';
-  var subText, titleText,iconActivity;
+  var subText, titleText,iconActivity,colorActivity;
   _history_dailyState({required this.restListActivity});
 
   @override
@@ -54,33 +54,33 @@ class _history_dailyState extends State<history_daily> {
                 //Center(child: Text('${_start} - ${_end}')),
                 ElevatedButton(
                     onPressed: () async{
+                      String? formatStart;
+                      String? formatEnd;
                       final DateTimeRange? dateTimeRagne = await showDateRangePicker(
                           context: context,
                           firstDate: DateTime(2023),
                           lastDate: DateTime.now()
                       );
 
-                      if(dateTimeRagne != null){
+                      if(dateTimeRagne != null) {
                         setState(() {
-
                           seledtedDates = dateTimeRagne;
-                          _start = seledtedDates.toString().substring(0,10);
-                          _end = seledtedDates.toString().substring(26,36);
-                          //String formattedStart = DateFormat('dd/MM/yyyy').format(_start);
-                          //String formattedEnd = DateFormat('dd/MM/yyyy').format(_end);
+                          _start = seledtedDates.start;
+                          _end = seledtedDates.end;
+                          formatStart = DateFormat('dd/MM/yyyy').format(_start);
+                          formatEnd = DateFormat('dd/MM/yyyy').format(_end);
                           print(seledtedDates);
-                          //print(formattedStart);
-                          //print(formattedEnd);
-
-                          print(_start.replaceAll('-','/'));
-                          print(_end.replaceAll('-','/'));
+                          print(_start);
+                          print(formatStart);
+                          print(formatEnd);
                         });
                       }
-                      /*Api restContent = await new Api();
+                      Api restContent = await new Api();
                       SharedPreferences pref = await SharedPreferences.getInstance();
                       var restId = await pref.getString("token");
                       var showAcitivityFood = await restContent.get_history(
-                          restId, _start, _end);*/
+                          restId, formatStart, formatEnd);
+                      print(showAcitivityFood);
                     },
                     child: Text('Choose Dates')),
                 SizedBox(height: 10,),
@@ -90,12 +90,14 @@ class _history_dailyState extends State<history_daily> {
                   itemBuilder: (context, index) {
                     if(restListActivity[index]['activity'] == 'food'){
                       iconActivity = Icons.fastfood;
+                      colorActivity = Colors.orange.shade200;
                       titleText = restListActivity[index]['nameactivity'];
                       subText = 'มื้อที่กิน : '+restListActivity[index]['meal'] + " จำนวน : "
                           +restListActivity[index]['amount']+' น้ำตาล : '+restListActivity[index]['sugar'].toStringAsFixed(2)+'\nวันที่ '+(restListActivity[index]['datetime']).substring(0,11)
                           +' เวลา '+ (restListActivity[index]['datetime']).substring(11,restListActivity[index]['datetime'].length)+' น.';
                     }else{
                       iconActivity = Icons.sports;
+                      colorActivity = Colors.lightGreen.shade400;
                       titleText = restListActivity[index]['nameactivity'];
                       subText = 'ระยะเวลาออกกำลังกาย : '+restListActivity[index]['timestamp'] +' น้ำตาล : '+restListActivity[index]['sugar'].toStringAsFixed(2)+'\nวันที่ '+(restListActivity[index]['datetime']).substring(0,11)
                           +' เวลา '+ (restListActivity[index]['datetime']).substring(11,restListActivity[index]['datetime'].length)+' น.';
@@ -104,7 +106,7 @@ class _history_dailyState extends State<history_daily> {
                       margin: EdgeInsets.only(bottom: 8),
                       padding:EdgeInsets.only(top: 15, left: 10, right: 10),
                       decoration: BoxDecoration(
-                        color: Colors.blueAccent.shade100,
+                        color: colorActivity,
                         borderRadius: BorderRadius.all(
                           Radius.circular(20),
                         ),

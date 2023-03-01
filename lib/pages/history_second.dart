@@ -162,12 +162,13 @@ class _history_secondState extends State<history_second> {
           itemHeight: 40,
           dropdownMaxHeight: 200,
           searchController: foodController,
+          searchInnerWidgetHeight: 50,
           searchInnerWidget: Padding(
             padding: EdgeInsets.only(
-              top: 10,
-              bottom: 5,
-              right: 15,
-              left: 15,
+              top: 8,
+              bottom: 4,
+              right: 8,
+              left: 8,
             ),
             child: TextFormField(
               controller: foodController,

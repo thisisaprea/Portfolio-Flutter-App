@@ -1,9 +1,11 @@
 
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:project_final/pages/history.dart';
 import 'package:project_final/services/Api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../controller/user_model.dart';
 import 'HomePage.dart';
@@ -26,6 +28,7 @@ class Bottom_Pages extends StatefulWidget {
 class _Bottom_PagesState extends State<Bottom_Pages> {
 
   int _selectedIndex = 0;
+
 
   final screens = [
     HomePage(),

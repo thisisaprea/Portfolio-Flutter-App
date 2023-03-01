@@ -67,7 +67,23 @@ class Api {
       }
     }
   }
-
+  send_email_verifiretion(tokenID) async {
+    final http.Response response = await http.post(
+      Uri.parse("http://10.0.2.2:8000/send_verdify/"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'Token': await tokenID,
+      }),
+    );
+    if (response.statusCode == 200) {
+      print(jsonDecode(response.body));
+      return (jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to Logout.');
+    }
+  }
   Logout(tokenID) async {
     final http.Response response = await http.post(
       Uri.parse("http://10.0.2.2:8000/logout/"),
@@ -133,7 +149,7 @@ class Api {
       throw Exception('Not Found');
     }
   }
-  get_contentbased(tokenID, dateFormat) async {
+  get_contentbased(tokenID, dateFormat, meal) async {
     final http.Response response = await http.post(
       Uri.parse("http://10.0.2.2:8000/content/"),
       headers: <String, String>{
@@ -141,7 +157,8 @@ class Api {
       },
       body: jsonEncode(<String, String>{
         'uid': await tokenID,
-        'dateformat' : await dateFormat
+        'dateformat' : await dateFormat,
+        'meal' : await meal,
       }),
     );
     if (response.statusCode == 200) {

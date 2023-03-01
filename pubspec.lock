@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.6.0"
+  animated_button_bar:
+    dependency: "direct main"
+    description:
+      name: animated_button_bar
+      sha256: fd76fc16d9179fb6c04cb955d03489983fe33eadb02c1c156c212058b163f67c
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2+1"
   args:
     dependency: transitive
     description:
@@ -177,6 +185,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.2"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      sha256: c2b87cb7756efdf69892005af546c56c0b5037f54d2a88269b4f347a505e3ca2
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.5"
   fake_async:
     dependency: transitive
     description:
@@ -325,6 +341,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  in_date_range:
+    dependency: "direct main"
+    description:
+      name: in_date_range
+      sha256: "72bae318a535aa99ac53e35e3ba9cfb6023b63ce8767706332ee9b9b5886c03c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
+  in_date_utils:
+    dependency: transitive
+    description:
+      name: in_date_utils
+      sha256: "17c6d2d05df5c27fd3df85fd636204bbbc834bca2a3d08a1c408f4bc2357dfcf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   intl:
     dependency: "direct main"
     description:
@@ -658,22 +690,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  syncfusion_flutter_core:
-    dependency: transitive
-    description:
-      name: syncfusion_flutter_core
-      sha256: "5f7dae40707df507325ee045d1a172aea9f449ac4244d7c52391dd97208eeef8"
-      url: "https://pub.dev"
-    source: hosted
-    version: "20.4.51"
-  syncfusion_flutter_datepicker:
-    dependency: "direct main"
-    description:
-      name: syncfusion_flutter_datepicker
-      sha256: "5e7bfe47437c1a106f8c4502a13ab7d57ed8195c1578b40ffa50dea1120e26e3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "20.4.51"
   term_glyph:
     dependency: transitive
     description:

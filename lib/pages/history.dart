@@ -18,15 +18,20 @@ class _report_staticState extends State<report_static> {
   var title;
   _report_staticState({required this.restListActivity,required this.title});
   var subText, titleText;
+  String? dateStart;
+  void setDateStart(){
+    setState(() {
+      dateStart = '18/02/2023';
+    });
+  }
   @override
   void initState() {
     super.initState();
+    setDateStart();
     for(var i in restListActivity){
       number = number + 1;
     }
-
   }
-
   int number = 0;
   @override
   Widget build(BuildContext context) {
@@ -41,14 +46,7 @@ class _report_staticState extends State<report_static> {
           child: Container(
             child: Column(
               children: [
-                /*OutlinedButton(
-                  onPressed: () {
-                    setState(() {
-                      number = number + 1;
-                    });
-                  },
-                  child: Text('add'),
-                ),*/
+
                 ListView.builder(
                   physics: ScrollPhysics(parent: null),
                   shrinkWrap: true,

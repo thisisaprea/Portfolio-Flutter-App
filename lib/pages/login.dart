@@ -141,7 +141,14 @@ class _login_pageState extends State<login_page> {
                   headerAnimationLoop: false,
                   title: 'E-mail Verified',
                   desc: 'กรุณายืนยัน E-mail เพื่อเข้าสู่ระบบ',
-                  btnOkOnPress: () {},
+                  btnOkOnPress: () async{
+                    print('---------------------------------------');
+                    print(login['datauser']);
+                      Api restSentVerify = await new Api();
+                      await restSentVerify.send_email_verifiretion(login['datauser']);
+                    print('---------------------------------------');
+                  },
+                  btnCancelOnPress: (){}
                 ).show();
               }else{
                 await AwesomeDialog(
