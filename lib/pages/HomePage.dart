@@ -46,9 +46,10 @@ class _HomePageState extends State<HomePage> {
   var sugarValue = 8.0;
   late SharedPreferences pref;
   String? dateStart;
+  bool loading = false;
   void setDateStart(){
     setState(() {
-      dateStart = '18/02/2023';
+      dateStart = '24/02/2023';
     });
   }
   void getActivityUser() async {
@@ -104,8 +105,11 @@ class _HomePageState extends State<HomePage> {
   void getdataActivity() async {
     Api restActivity = new Api();
     var restacivity = await restActivity.get_activity();
+    loading = true;
     setState(() {
+      loading == false;
       activity = restacivity;
+
     });
   }
 
@@ -257,11 +261,10 @@ class _HomePageState extends State<HomePage> {
                       onTap: () async {
                         Api restContent = await new Api();
                         pref = await SharedPreferences.getInstance();
-                        String formattedDate =
-                            DateFormat('dd/MM/yyyy').format(dateTime);
+                        String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
                         var restId = await pref.getString("token");
                         var showAcitivityFood = await restContent.get_history(
-                            restId, formattedDate, formattedDate);
+                            restId, dateStart, formattedDate);
                         //print(showAcitivityFood['data_history'][0]);
                         var listHistory;
 
@@ -277,115 +280,14 @@ class _HomePageState extends State<HomePage> {
                                     restListActivity: listHistory)));
                       },
                       child: ConsultCard(
-                          name: 'น้ำตาลที่กินได้ต่อวันคงเหลือ',
+                          name: 'น้ำตาลที่กินไป',
                           color: Colors.deepOrange.shade200,
-                          title: getsugar['sugar']['sugar'].toStringAsFixed(2) + ' กรัม'
-                              + '\n'+'น้ำตาลที่เหลือ'+'\n'+sugarValue.toStringAsFixed(2) + ' กรัม'),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Flexible(
-                      flex: 1,
-                      fit: FlexFit.tight,
-                      child: Container(
-                        //width: 220,
-                        height: 130,
-                        decoration: BoxDecoration(
-                          color: Colors.deepOrange.shade200,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                        ),
-                        child: Padding(
-                          padding:
-                              EdgeInsets.only(top: 24, left: 18, right: 12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        'ค่าน้ำตาลในเลือด',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '${dataFbs}' + ' mg/dl',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15.0,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              OutlinedButton(
-                                onPressed: () => showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      AlertDialog(
-                                    title:
-                                        Text('อัปเดตค่าน้ำตาลในเลือดปัจจุบัน'),
-                                    content: Text('120'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, 'Cancel'),
-                                        child: const Text('Cancel'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, 'OK'),
-                                        child: const Text('OK'),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                style: ButtonStyle(
-                                  foregroundColor:
-                                      MaterialStateProperty.all(Colors.white),
-                                  backgroundColor:
-                                      MaterialStateProperty.all(Colors.white38),
-                                  shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(20),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                child: Text(
-                                  'อัปเดต',
-                                  style: TextStyle(
-                                      color: Colors.black87, fontSize: 12),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                          title: getsugar['sugar']['sugar'].toStringAsFixed(2) + ' กรัม',
+                        title2: 'น้ำตาลที่กินได้ต่อวันคงเหลือ',
+                        des: sugarValue.toStringAsFixed(2) + ' กรัม',
+
                       ),
+
                     ),
                   ],
                 ),
@@ -551,46 +453,6 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: 30,
               ),
-              /*InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ItemList(),
-                      ));
-                },
-                child: Padding(
-                  padding:
-                      EdgeInsets.only(top: 24, left: 10, right: 10, bottom: 25),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height / 8,
-                    decoration: BoxDecoration(
-                      color: Colors.yellow.shade100,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(20),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 1, left: 20, right: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'ไข่เจียวหมูสับ',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 25,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),*/
             ],
           ),
         ),
@@ -687,7 +549,7 @@ class _HomePageState extends State<HomePage> {
       onPressed: () {
         Navigator.of(context).pop();
       },
-      child: Text('Cancel'),
+      child: Text('ยกเลิก'),
       style: ElevatedButton.styleFrom(
           primary: Colors.black.withOpacity(0.8),
           textStyle: TextStyle(fontWeight: FontWeight.bold)),
@@ -732,7 +594,7 @@ class _HomePageState extends State<HomePage> {
           ).show();
         }
       },
-      child: Text('Add'),
+      child: Text('ตกลง'),
       style: ElevatedButton.styleFrom(
           primary: Colors.green,
           textStyle: TextStyle(fontWeight: FontWeight.bold)),

@@ -4,7 +4,9 @@ class ConsultCard extends StatelessWidget {
   final String name;
   final Color color;
   final String title;
-  const ConsultCard({super.key, required this.name, required this.color, required this.title});
+  final String title2;
+  final des;
+  const ConsultCard({super.key, required this.name, required this.color, required this.title, required this.title2, required this.des});
 
   @override
   Widget build(BuildContext context) {
@@ -12,60 +14,88 @@ class ConsultCard extends StatelessWidget {
       flex: 1,
       fit: FlexFit.tight,
       child: Container(
-        //width: 220,
-        height: 200,
+        width: 370,
+        height: 215,
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.all(
             Radius.circular(20),
           ),
         ),
-        child: Padding(
-          padding: EdgeInsets.only(top: 24, left: 24, right: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 24, left: 24, right: 24,bottom: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-
                       Text(
                         name,
                         style: TextStyle(
-                          color: Colors.black,
+                          color: Colors.black87,
                           fontWeight: FontWeight.bold,
-                          fontSize: 15,
+                          fontSize: 20,
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30.0,
-                    ),
+                  SizedBox(
+                    height: 10,
                   ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30.0,
+                        ),
+                      ),
+
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        title2,
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        des,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30.0,
+                        ),
+                      ),
+                    ],
+                  ),
+
                 ],
               ),
-              SizedBox(
-                height: 10,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

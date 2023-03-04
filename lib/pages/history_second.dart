@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:project_final/pages/SpeechToText.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/Api.dart';
@@ -33,10 +34,9 @@ class _history_secondState extends State<history_second> {
     'เช้า',
     'เที่ยง',
     'เย็น',
-    'อื่นๆ'
-
   ];
   var id_user;
+  bool loading = false;
 
   void getdataUser() async {
     pref = await SharedPreferences.getInstance();
@@ -56,8 +56,10 @@ class _history_secondState extends State<history_second> {
     Api restActivity = new Api();
     var restfood = await restActivity.get_food();
     setState(() {
+      loading = true;
       listFood = restfood;
     });
+    loading = false;
   }
 
   @override
@@ -81,17 +83,15 @@ class _history_secondState extends State<history_second> {
       ),
       buttonPadding: const EdgeInsets.only(right: 24),
       elevation: 24.0,
-      content: Form(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            foodField(),
-            SizedBox(height: 10),
-            mealDropdown(),
-            SizedBox(height: 10),
-            mealField(),
-          ],
-        ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          mealDropdown(),
+          SizedBox(height: 10),
+          foodField(),
+          SizedBox(height: 10),
+          mealField(),
+        ],
       ),
       actions: <Widget>[
         micButton(context),
@@ -251,15 +251,10 @@ class _history_secondState extends State<history_second> {
     return IconButton(
       icon: Icon(Icons.mic),
       onPressed: () {
-        AlertDialog(
-          shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          title: Text(
-            'พูดได้เลย',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
-        );
+        showDialog(
+            context: context,
+            builder: (context) => SpeechToText(),);
+
       },
     );
   }

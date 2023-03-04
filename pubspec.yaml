@@ -59,9 +59,9 @@ dependencies:
   duration_picker: ^1.1.1
   awesome_dialog: ^3.0.2
   animated_button_bar: ^0.0.2
-  #speech_to_text: ^6.1.1
-  #highlight_text: ^1.6.0
-  #avatar_glow: ^2.0.2
+  speech_to_text: ^6.1.1
+  highlight_text: ^1.6.0
+  avatar_glow: ^2.0.2
 
 dev_dependencies:
   flutter_test:
