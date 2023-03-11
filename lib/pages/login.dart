@@ -23,12 +23,11 @@ class _login_pageState extends State<login_page> {
   final _formKey = GlobalKey<FormState>();
   bool isHiddenPassword = true;
 
-
-
   // editing controller
   final TextEditingController emailController = new TextEditingController();
   final TextEditingController passwordController = new TextEditingController();
   late SharedPreferences pref;
+
   //final _auth = FirebaseAuth.instance;
   String? errorMessage;
 
@@ -63,39 +62,78 @@ class _login_pageState extends State<login_page> {
         ));
 
     //password field
-    final passwordField = TextFormField(
-        autofocus: false,
-        controller: passwordController,
-        obscureText: isHiddenPassword,
-        validator: (value) {
-          RegExp regex = new RegExp(r'^.{6,}$');
-          if (value!.isEmpty) {
-            return ("กรุณาใส่รหัสผ่าน");
-          }
-          if (!regex.hasMatch(value)) {
-            return ("รหัสผ่านไม่ถูกต้อง");
-          }
-        },
-        onSaved: (value) {
-          passwordController.text = value!;
-        },
-        textInputAction: TextInputAction.done,
-        decoration: InputDecoration(
-          prefixIcon: Icon(Icons.vpn_key),
-          suffixIcon: IconButton(
-              icon:
-              Icon(isHiddenPassword? Icons.visibility : Icons.visibility_off),
-              onPressed: () {
-                setState(() {
-                 isHiddenPassword = !isHiddenPassword;
-                });
-              }),
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-          hintText: "รหัสผ่าน",
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+    final passwordField = Column(
+      children: [
+        TextFormField(
+          autofocus: false,
+          controller: passwordController,
+          obscureText: isHiddenPassword,
+          validator: (value) {
+            RegExp regex = new RegExp(r'^.{6,}$');
+            if (value!.isEmpty) {
+              return ("กรุณาใส่รหัสผ่าน");
+            }
+            if (!regex.hasMatch(value)) {
+              return ("รหัสผ่านไม่ถูกต้อง");
+            }
+          },
+          onSaved: (value) {
+            passwordController.text = value!;
+          },
+          textInputAction: TextInputAction.done,
+          decoration: InputDecoration(
+            prefixIcon: Icon(Icons.vpn_key),
+            suffixIcon: IconButton(
+                icon: Icon(
+                    isHiddenPassword ? Icons.visibility : Icons.visibility_off),
+                onPressed: () {
+                  setState(() {
+                    isHiddenPassword = !isHiddenPassword;
+                  });
+                }),
+            contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+            hintText: "รหัสผ่าน",
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
-        ));
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            GestureDetector(
+              onTap: () async{
+                Api callApi = new Api();
+                await callApi.resetPassword(emailController.text);
+                  await AwesomeDialog(
+                      context: context,
+                      dialogType: DialogType.warning,
+                      animType: AnimType.topSlide,
+                      showCloseIcon: true,
+                      headerAnimationLoop: false,
+                      title: 'เปลี่ยนรหัสผ่าน',
+                      desc: 'กรุณาตรวจสอบ E-mail เพื่อทำการเปลี่ยนรหัสผ่าน',
+                      btnOkText: 'ตกลง',
+                      btnOkOnPress: () async {
+                        print('---------------------------------------');
+                        print('reset password success');
+                        print('---------------------------------------');
+                      },
+                  )
+                      .show();
+              },
+              child: Text(
+                "ลืมรหัสผ่าน?",
+                style: TextStyle(
+                    color: Colors.blueAccent,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15),
+              ),
+            ),
+          ],
+        )
+      ],
+    );
 
     final loginButton = Material(
       elevation: 5,
@@ -104,14 +142,14 @@ class _login_pageState extends State<login_page> {
       child: MaterialButton(
           padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
-          onPressed: () async{
+          onPressed: () async {
             bool validate = _formKey.currentState!.validate();
-            if(validate){
+            if (validate) {
               SharedPreferences pref = await SharedPreferences.getInstance();
               check_user checkuse = new check_user();
-              var login = await checkuse.login(emailController.text, passwordController.text);
-              if(await login['message'] == "Login success"){
-                
+              var login = await checkuse.login(
+                  emailController.text, passwordController.text);
+              if (await login['message'] == "Login success") {
                 pref.setString("email", login["datauser"]["Email"]);
                 pref.setString("firstname", login["datauser"]["Firstname"]);
                 pref.setString("lastname", login["datauser"]["Lastname"]);
@@ -128,25 +166,26 @@ class _login_pageState extends State<login_page> {
                 pref.setString("deviceLogin", login["datauser"]["devicelogin"]);
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => Bottom_Pages()));
-              } else if(await login['message'] == "Verified false"){
+              } else if (await login['message'] == "Verified false") {
                 await AwesomeDialog(
-                  context: context,
-                  dialogType: DialogType.info,
-                  animType: AnimType.topSlide,
-                  showCloseIcon: true,
-                  headerAnimationLoop: false,
-                  title: 'E-mail Verified',
-                  desc: 'กรุณายืนยัน E-mail เพื่อเข้าสู่ระบบ',
-                  btnOkOnPress: () async{
-                    print('---------------------------------------');
-                    print(login['datauser']);
-                      Api restSentVerify = await new Api();
-                      await restSentVerify.send_email_verifiretion(login['datauser']);
-                    print('---------------------------------------');
-                  },
-                  btnCancelOnPress: (){}
-                ).show();
-              }else{
+                        context: context,
+                        dialogType: DialogType.info,
+                        animType: AnimType.topSlide,
+                        showCloseIcon: true,
+                        headerAnimationLoop: false,
+                        title: 'E-mail Verified',
+                        desc: 'กรุณายืนยัน E-mail เพื่อเข้าสู่ระบบ',
+                        btnOkOnPress: () async {
+                          print('---------------------------------------');
+                          print(login['datauser']);
+                          Api restSentVerify = await new Api();
+                          await restSentVerify
+                              .send_email_verifiretion(login['datauser']);
+                          print('---------------------------------------');
+                        },
+                        btnCancelOnPress: () {})
+                    .show();
+              } else {
                 await AwesomeDialog(
                   context: context,
                   dialogType: DialogType.warning,
@@ -171,8 +210,6 @@ class _login_pageState extends State<login_page> {
           )),
     );
 
-
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.green.shade100,
@@ -192,11 +229,13 @@ class _login_pageState extends State<login_page> {
                       //fit: BoxFit.contain,
                     ),
                     Container(
-                      padding: EdgeInsets.only(right: 8,left: 8,top: 8,bottom: 2),
+                      padding:
+                          EdgeInsets.only(right: 8, left: 8, top: 8, bottom: 2),
                       decoration: BoxDecoration(
-                        color: Colours.whiteSmoke, //Colors.green.withOpacity(0.7),
+                        color: Colours.whiteSmoke,
+                        //Colors.green.withOpacity(0.7),
                         borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30),
+                            topLeft: Radius.circular(30),
                             topRight: Radius.circular(30),
                             bottomLeft: Radius.circular(30),
                             bottomRight: Radius.circular(30)),
@@ -215,12 +254,10 @@ class _login_pageState extends State<login_page> {
                           SizedBox(height: 15),
                           loginButton,
                           SizedBox(height: 15),
-
                         ],
                       ),
                     ),
                     SizedBox(height: 15),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -229,15 +266,17 @@ class _login_pageState extends State<login_page> {
                           style: TextStyle(color: Colors.black),
                         ),
                         GestureDetector(
-                          onTap: () async{
+                          onTap: () async {
                             //call Api here
                             Api apiRest = new Api();
                             List<String> restFood = await apiRest.get_food();
+                            var restApiFood = await apiRest.get_food_map();
 
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Register_screen(restFood:restFood)));
+                                    builder: (context) =>
+                                        Register_screen(restFood: restFood, restApiFood: restApiFood,)));
                           },
                           child: Text(
                             "ลงทะเบียน",
@@ -264,7 +303,7 @@ class _login_pageState extends State<login_page> {
       isHiddenPassword = !isHiddenPassword;
     });
   }
-  /*void resendVerify(){
+/*void resendVerify(){
     GestureDetector(
       onTap: () async{
         Api apiRest = new Api();
@@ -278,5 +317,4 @@ class _login_pageState extends State<login_page> {
             fontSize: 15),
       ),
     )*/
-  }
-
+}

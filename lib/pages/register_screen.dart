@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:colours/colours.dart';
+import 'package:custom_searchable_dropdown/custom_searchable_dropdown.dart';
 import 'package:date_field/date_field.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -20,19 +21,21 @@ import 'login.dart';
 class Register_screen extends StatefulWidget {
   static const routeName = '/register_screen';
   var restFood;
+  var restApiFood;
 
   //const Register_screen({Key? key}) : super(key: key);
-  Register_screen({required this.restFood});
+  Register_screen({required this.restFood, required this.restApiFood});
 
   @override
   _Register_screenState createState() =>
-      _Register_screenState(restFood: restFood);
+      _Register_screenState(restFood: restFood, restApiFood: restApiFood);
 }
 
 class _Register_screenState extends State<Register_screen> {
   var restFood;
+  var restApiFood;
 
-  _Register_screenState({required this.restFood});
+  _Register_screenState({required this.restFood, required this.restApiFood});
 
   late double screen;
   String? errorMessage;
@@ -41,20 +44,8 @@ class _Register_screenState extends State<Register_screen> {
   final _formKey = GlobalKey<FormState>();
   String? dropdownValue = '';
   var _selectedMenu;
-  var menu;
   var selectedjobs;
-  var listFood;
   DateTime dateTime = DateTime.now();
-  List<String> listmultiFood = [];
-  List<String> listfood = [
-    'ข้าวผัดกุ้ง',
-    'ข้าวกระเพราหมูสับ',
-    'ผัดซีอิ๊ว',
-    'สุกี้หมูแห้ง',
-    'โอเลี้ยง'
-  ];
-
-  //var job = "นักเรียน/นักศึกษา";
   List<String> jobList = [
     'รับจ้างอิสระ',
     'รับจ้างทั่วไป',
@@ -72,19 +63,17 @@ class _Register_screenState extends State<Register_screen> {
   ];
 
   // editing Controller
-  final userNameEditingController = TextEditingController();
-  final firstNameEditingController = TextEditingController();
-  final lastNameEditingController = TextEditingController();
-  final emailEditingController = TextEditingController();
-  final passwordEditingController = TextEditingController();
-  final confirmPasswordEditingController = TextEditingController();
-  final fbsEditingController = TextEditingController();
-  final jobEditingController = TextEditingController();
-  final sexEditingController = TextEditingController();
-  final birthdayEditingController = TextEditingController();
-  final weightEditingController = TextEditingController();
-  final menuItemsEditingController1 = TextEditingController();
-  final menuItemsEditingController2 = TextEditingController();
+  final TextEditingController userNameEditingController = new TextEditingController();
+  final TextEditingController firstNameEditingController = new TextEditingController();
+  final TextEditingController lastNameEditingController = new TextEditingController();
+  final TextEditingController emailEditingController = new TextEditingController();
+  final TextEditingController passwordEditingController = new TextEditingController();
+  final TextEditingController confirmPasswordEditingController = new TextEditingController();
+  final TextEditingController fbsEditingController = new TextEditingController();
+  final TextEditingController jobEditingController = new TextEditingController();
+  final TextEditingController sexEditingController = new TextEditingController();
+  final TextEditingController birthdayEditingController = new TextEditingController();
+  final TextEditingController weightEditingController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -283,72 +272,31 @@ class _Register_screenState extends State<Register_screen> {
       },
     );
     //fev 5 foods
-    final favfoodField = DropdownButtonFormField2(
-      validator: (value) => value == null ? "กรุณาเลือกเมนู" : null,
-      onChanged: (menuValue) {
+
+    final multiSelect = CustomSearchableDropDown(
+      items: restApiFood,
+      label: 'เลือกเมนูอาหารที่ชอบ',
+      //multiSelectTag: 'Names',
+      multiSelectValuesAsWidget: true,
+      decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
+      multiSelect: true,
+      prefixIcon: Padding(
+        padding: const EdgeInsets.all(0.8),
+        child: Icon(Icons.search),
+      ),
+      dropDownMenuItems: restApiFood.map((item) {
+        return item.toString();
+      }).toList(),
+      onChanged: (value) {
         setState(() {
-          menuItemsEditingController2.text = menuValue! as String;
+          print(value);
+          _selectedMenu = value!;
+          print(_selectedMenu);
+
         });
+
       },
-      items: restFood.map<DropdownMenuItem<String>>(
-        (String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        },
-      ).toList(),
-      buttonHeight: 40,
-      buttonWidth: 200,
-      itemHeight: 40,
-      dropdownMaxHeight: 200,
-      searchController: menuItemsEditingController2,
-      searchInnerWidgetHeight: 50,
-      searchInnerWidget: Padding(
-        padding: EdgeInsets.only(
-          top: 8,
-          bottom: 4,
-          right: 8,
-          left: 8,
-        ),
-        child: TextFormField(
-          controller: menuItemsEditingController2,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 8,
-            ),
-            hintText: 'ค้นหาเมนู...',
-            hintStyle: const TextStyle(fontSize: 12),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-      ),
-      searchMatchFn: (menuItems, searchValue) {
-        return (menuItems.value.toString().contains(searchValue));
-      },
-      onMenuStateChange: (isOpen) {
-        if (!isOpen) {
-          menuItemsEditingController2.clear();
-        }
-      },
-      value: _selectedMenu,
-      isExpanded: true,
-      hint: Text(
-        "เลือกเมนูโปรด",
-      ),
-      decoration: InputDecoration(
-        prefixIcon: Icon(Icons.transgender),
-        contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-        hintText: "อาชีพ",
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        //textInputAction: TextInputAction.next,
-      ),
+
     );
 
     final emailField = TextFormField(
@@ -493,7 +441,7 @@ class _Register_screenState extends State<Register_screen> {
                           SizedBox(height: 20),
                           occupationField,
                           SizedBox(height: 20),
-                          favfoodField,
+                          multiSelect,
                           SizedBox(height: 20),
                           birthdayField,
                           /*favfood1,
@@ -568,7 +516,7 @@ class _Register_screenState extends State<Register_screen> {
                   weightEditingController.text,
                   fbsEditingController.text,
                   sexEditingController.text,
-                  listfood.toString());
+                 _selectedMenu.toString());
 
               if (await signup['message'] == "Signup Finishes") {
                 await AwesomeDialog(
@@ -589,14 +537,16 @@ class _Register_screenState extends State<Register_screen> {
               } else {
                 Api apiRest = new Api();
                 var restFood = await apiRest.get_food();
+                var restFoodMap = await apiRest.get_food_map();
                 print(signup['message']);
                 MaterialPageRoute materialPageRoute = MaterialPageRoute(
                     builder: (BuildContext context) =>
-                        Register_screen(restFood: restFood));
+                        Register_screen(restFood: restFood, restApiFood: restFoodMap,));
                 Navigator.of(this.context).push(materialPageRoute);
               }
               print(firstNameEditingController.text);
               print(lastNameEditingController.text);
+              print(_selectedMenu);
             }
           },
           child: Text(

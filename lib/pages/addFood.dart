@@ -350,10 +350,16 @@ class _history_secondState extends State<history_second> {
             );
             if (pickedTime != null) {
               print(pickedTime);
-              //String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
-              //print(formattedDate);
+              String timeTrim = pickedTime.toString().substring(10,15);
+              print(timeTrim);
+              String date = DateFormat('dd/MM/yyyy').format(dateLast);
+              String formattedDate = DateFormat('ddMMyyyy').format(dateLast);
+              String dateAndtime = date + " " +timeTrim+':00';
+              print(date);
+              print(formattedDate);
+              print(dateAndtime);
               setState(() {
-                timeEditingController.text = pickedTime.toString(); //set output date to TextField value.
+                timeEditingController.text = timeTrim; //set output date to TextField value.
               });
             } else {}
           },

@@ -26,7 +26,7 @@ class Api {
         'email': await email,
         'sex': await sex,
         'password': await password,
-        'food': await "หมูตุ๋นสมุนไพร,สเต็กเนื้อริบอาย,เกี๊ยวหมูซอสญี่ปุ่น,หมี่ซั่วหมูซอสปักกิ่ง,กาแฟดำ ไม่หวาน",
+        'food': await food,
       }),
     );
     print("API response.statusCode : ");
@@ -118,10 +118,30 @@ class Api {
         listFood.add(jsonFood['datauser'][i]);
 
       }
+      //print(jsonFood);
       //jsonFood['datauser'];
       return listFood;
       /*print(jsonDecode(response.body));
       return (jsonDecode(response.body));*/
+    } else {
+      throw Exception('Not Found');
+    }
+  }
+  get_food_map() async {
+    final http.Response response = await http.post(
+      Uri.parse("http://10.0.2.2:8000/get_food/"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'uid': await "",
+      }),
+
+    );
+    if (response.statusCode == 200) {
+      var jsonFood = jsonDecode(response.body);
+      print(jsonFood['datauser']);
+      return (jsonFood['datauser']);
     } else {
       throw Exception('Not Found');
     }
@@ -300,6 +320,24 @@ class Api {
       return (jsonDecode(response.body));
     } else {
       throw Exception('Not Found');
+    }
+  }
+  resetPassword(email) async {
+    print(email);
+    final http.Response response = await http.post(
+      Uri.parse("http://10.0.2.2:8000/resetpassword/"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': await email,
+      }),
+    );
+    if (response.statusCode == 200) {
+      print(jsonDecode(response.body));
+      return (jsonDecode(response.body));
+    } else {
+      throw Exception('Failed.');
     }
   }
 }

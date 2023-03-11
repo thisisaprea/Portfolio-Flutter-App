@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/Api.dart';
 
@@ -46,7 +47,7 @@ class _history_todayState extends State<history_today> {
     pref = await SharedPreferences.getInstance();
     String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
     var restId = await pref.getString("token");
-    restListActivity = await restContent.get_history(restId, "", "");
+    restListActivity = await restContent.get_history(restId, "02/03/2023", "11/03/2023");
     loading = false;
     setState(() {
       try {
@@ -158,16 +159,14 @@ class _history_todayState extends State<history_today> {
                         itemBuilder: (context, index) {
                           print('//////////////////////////////////////////////');
                           if (listHistory[index]['activity'] == 'food') {
-                            iconActivity = Icons.fastfood;
-                            colorActivity = Colours.skyBlue;
+                            iconActivity = LineAwesomeIcons.hamburger;
+                            colorActivity = Colours.darkSeagreen;
                             colorText = Colors.black;
                             titleText = listHistory[index]['nameactivity'];
                             subText = 'มื้อที่กิน : ' +
                                 listHistory[index]['meal'] +
                                 " จำนวน : " +
                                 listHistory[index]['amount'] +
-                                ' น้ำตาล : ' +
-                                listHistory[index]['sugar'].toStringAsFixed(2) +
                                 '\nวันที่ ' +
                                 (listHistory[index]['datetime']).substring(0, 11) +
                                 ' เวลา ' +
@@ -176,15 +175,13 @@ class _history_todayState extends State<history_today> {
                                 ' น.';
                             print('//////////////////////////////////////////////');
                           } else {
-                            iconActivity = Icons.sports;
+                            iconActivity = LineAwesomeIcons.biking;
                             colorActivity = Colours.steelBlue;
                             colorText = Colors.white;
                             print('//////////////////////////////////////////////');
                             titleText = listHistory[index]['nameactivity'];
                             subText = 'ระยะเวลาออกกำลังกาย : ' +
                                 listHistory[index]['timestamp'] +
-                                ' น้ำตาล : ' +
-                                listHistory[index]['sugar'].toStringAsFixed(2) +
                                 '\nวันที่ ' +
                                 (listHistory[index]['datetime']).substring(0, 11) +
                                 ' เวลา ' +

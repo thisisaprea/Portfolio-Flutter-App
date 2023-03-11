@@ -23,7 +23,7 @@ class _Bottom_PagesState extends State<Bottom_Pages> {
   final screens = [
     HomePage(),
     ItemList(),
-    history_today(),
+    onBoarding(),
     profile_user(),
   ];
 

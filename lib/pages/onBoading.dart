@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:colours/colours.dart';
@@ -26,15 +25,19 @@ class _onBoardingState extends State<onBoarding> {
   //String? selectedValue;
   var listFood;
   var _selectedMenu;
+  var selected;
   bool loading = true;
   final TextEditingController textEditingController = TextEditingController();
   final TextEditingController sugarEditingController = TextEditingController();
   TimeOfDay time = TimeOfDay(hour: 10, minute: 30);
+
   void initState() {
     super.initState();
     getdataFood();
+
     //retrieveData();
   }
+
   List<String> listSelectFood = [];
   List<String> listItem = [
     'รับจ้างอิสระ',
@@ -47,119 +50,112 @@ class _onBoardingState extends State<onBoarding> {
     'นักเรียน/นักศึกษา',
     'ว่างงาน',
   ];
+
   Future getdataFood() async {
     Api restActivity = new Api();
-    var restfood = await restActivity.get_food();
+    var restfood = await restActivity.get_food_map();
     loading = false;
     setState(() {
       listFood = restfood;
+      print(listFood);
     });
-
   }
+
+
   Widget build(BuildContext context) {
-    final favfoodField = loading? Center(child: CircularProgressIndicator(),) :
-    DropdownButtonFormField2(
-      validator: (value) => value == null ? "กรุณาเลือกเมนู" : null,
-      onChanged: (menuValue) {
-        setState(() {
-          textEditingController.text = menuValue! as String;
-        });
-      },
-      items: listFood.map<DropdownMenuItem<String>>(
-            (String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        },
-      ).toList(),
-      buttonHeight: 40,
-      buttonWidth: 200,
-      itemHeight: 40,
-      dropdownMaxHeight: 200,
-      searchController: textEditingController,
-      searchInnerWidgetHeight: 50,
-      searchInnerWidget: Padding(
-        padding: EdgeInsets.only(
-          top: 8,
-          bottom: 4,
-          right: 8,
-          left: 8,
-        ),
-        child: TextFormField(
-          controller: textEditingController,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 8,
-            ),
-            hintText: 'ค้นหาเมนู...',
-            hintStyle: const TextStyle(fontSize: 12),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-      ),
-      searchMatchFn: (menuItems, searchValue) {
-        return (menuItems.value.toString().contains(searchValue));
-      },
-      onMenuStateChange: (isOpen) {
-        if (!isOpen) {
-          textEditingController.clear();
-        }
-      },
-      value: _selectedMenu,
-      isExpanded: true,
-      hint: Text(
-        "เลือกเมนูโปรด",
-      ),
-      decoration: InputDecoration(
-        prefixIcon: Icon(Icons.transgender),
-        contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-        hintText: "อาชีพ",
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        //textInputAction: TextInputAction.next,
-      ),
-    );
-    final multiSelect = CustomSearchableDropDown(
-      items: listFood.map<DropdownMenuItem<String>>(
-            (String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        },
-      ).toList(),
-      label: 'เลือกเมนูอาหารที่ชอบ',
-      multiSelectTag: 'Names',
-      multiSelectValuesAsWidget: true,
-      decoration: BoxDecoration(
-          border: Border.all(
-              color: Colors.blue
+   /* final favfoodField = loading
+        ? Center(
+            child: CircularProgressIndicator(),
           )
-      ),
+        : DropdownButtonFormField2(
+            validator: (value) => value == null ? "กรุณาเลือกเมนู" : null,
+            onChanged: (menuValue) {
+              setState(() {
+                textEditingController.text = menuValue! as String;
+              });
+            },
+            items: listFood.map<DropdownMenuItem<String>>(
+              (String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              },
+            ).toList(),
+            buttonHeight: 40,
+            buttonWidth: 200,
+            itemHeight: 40,
+            dropdownMaxHeight: 200,
+            searchController: textEditingController,
+            searchInnerWidgetHeight: 50,
+            searchInnerWidget: Padding(
+              padding: EdgeInsets.only(
+                top: 8,
+                bottom: 4,
+                right: 8,
+                left: 8,
+              ),
+              child: TextFormField(
+                controller: textEditingController,
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 8,
+                  ),
+                  hintText: 'ค้นหาเมนู...',
+                  hintStyle: const TextStyle(fontSize: 12),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+            ),
+            searchMatchFn: (menuItems, searchValue) {
+              return (menuItems.value.toString().contains(searchValue));
+            },
+            onMenuStateChange: (isOpen) {
+              if (!isOpen) {
+                textEditingController.clear();
+              }
+            },
+            value: _selectedMenu,
+            isExpanded: true,
+            hint: Text(
+              "เลือกเมนูโปรด",
+            ),
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.transgender),
+              contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+              hintText: "อาชีพ",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              //textInputAction: TextInputAction.next,
+            ),
+          );*/
+    final multiSelect = loading
+        ? Center(
+      child: CircularProgressIndicator(),
+    )
+        :CustomSearchableDropDown(
+      items: listFood,
+      label: 'เลือกเมนูอาหารที่ชอบ',
+      //multiSelectTag: 'Names',
+      multiSelectValuesAsWidget: true,
+      decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
       multiSelect: true,
-      prefixIcon:  Padding(
+      prefixIcon: Padding(
         padding: const EdgeInsets.all(0.0),
         child: Icon(Icons.search),
       ),
-      dropDownMenuItems: listFood?.map((item) {
-        return item.toString();})?.toList() ?? [],
-      onChanged: (value){
-        print('-------------------------');
-        print(value.toString());
-        if(value!=null)
-        {
-          textEditingController.text = value.toString();
-        }
-        else{
-          textEditingController.clear();
-        }
-        print(textEditingController.text);
+      dropDownMenuItems: listFood.map((item) {
+        return item.toString();
+      }).toList(),
+      onChanged: (value) {
+        print(value);
+        selected = value!;
+        print(selected);
       },
     );
     return Scaffold(
@@ -182,7 +178,8 @@ class _onBoardingState extends State<onBoarding> {
                     //color: Colours.lightSalmon.withOpacity(0.6),
                     borderRadius: BorderRadius.all(
                       Radius.circular(20),
-                    ),),
+                    ),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ExpansionTile(
@@ -192,9 +189,8 @@ class _onBoardingState extends State<onBoarding> {
                       children: [
                         TimeMealField(),
                       ],
-                      onExpansionChanged: (bool expanded){},
+                      onExpansionChanged: (bool expanded) {},
                       controlAffinity: ListTileControlAffinity.trailing,
-
                     ),
                   ),
                 ),
@@ -210,7 +206,8 @@ class _onBoardingState extends State<onBoarding> {
                     ),
                     borderRadius: BorderRadius.all(
                       Radius.circular(20),
-                    ),),
+                    ),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ExpansionTile(
@@ -219,23 +216,26 @@ class _onBoardingState extends State<onBoarding> {
                       children: [
                         sugarField(),
                       ],
-                      onExpansionChanged: (bool expanded){},
+                      onExpansionChanged: (bool expanded) {},
                       controlAffinity: ListTileControlAffinity.trailing,
-
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               multiSelect,
-              SizedBox(height: 20,),
-
+              SizedBox(
+                height: 20,
+              ),
             ],
           ),
         ),
       ),
     );
   }
+
   Widget TimeMealField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -268,7 +268,8 @@ class _onBoardingState extends State<onBoarding> {
       ],
     );
   }
-  Widget _TimePicker(){
+
+  Widget _TimePicker() {
     return TextFormField(
       autofocus: false,
       controller: textEditingController,
@@ -301,17 +302,20 @@ class _onBoardingState extends State<onBoarding> {
           //String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
           //print(formattedDate);
           setState(() {
-            textEditingController.text = pickedTime.toString(); //set output date to TextField value.
+            textEditingController.text =
+                pickedTime.toString(); //set output date to TextField value.
           });
         } else {}
       },
     );
   }
+
   Widget sugarField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('ใส่ค่าน้ำตาลที่ปรุง', style: TextStyle(fontWeight: FontWeight.bold)),
+        Text('ใส่ค่าน้ำตาลที่ปรุง',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         TextFormField(
           autofocus: false,
           controller: sugarEditingController,
@@ -340,4 +344,3 @@ class _onBoardingState extends State<onBoarding> {
     );
   }
 }
-
