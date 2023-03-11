@@ -62,6 +62,13 @@ dependencies:
   speech_to_text: ^6.1.1
   highlight_text: ^1.6.0
   avatar_glow: ^2.0.2
+  line_awesome_flutter: ^2.0.0
+  colours: ^0.0.2
+  fl_chart: ^0.61.0
+  syncfusion_flutter_charts: ^20.4.52
+  showcaseview: ^2.0.1
+  flutter_progress_hud: ^2.0.2
+  custom_searchable_dropdown: ^2.1.1
 
 dev_dependencies:
   flutter_test:

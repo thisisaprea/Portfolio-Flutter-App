@@ -7,7 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
 import '../services/Api.dart';
 import '../services/last_time.dart';
-import 'history_second.dart';
+import 'addFood.dart';
+
 
 class history_first extends StatefulWidget {
   static const routeName = '/history_first';

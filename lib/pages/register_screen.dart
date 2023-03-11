@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:colours/colours.dart';
 import 'package:date_field/date_field.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -44,6 +45,7 @@ class _Register_screenState extends State<Register_screen> {
   var selectedjobs;
   var listFood;
   DateTime dateTime = DateTime.now();
+  List<String> listmultiFood = [];
   List<String> listfood = [
     'ข้าวผัดกุ้ง',
     'ข้าวกระเพราหมูสับ',
@@ -301,6 +303,7 @@ class _Register_screenState extends State<Register_screen> {
       itemHeight: 40,
       dropdownMaxHeight: 200,
       searchController: menuItemsEditingController2,
+      searchInnerWidgetHeight: 50,
       searchInnerWidget: Padding(
         padding: EdgeInsets.only(
           top: 8,
@@ -449,69 +452,64 @@ class _Register_screenState extends State<Register_screen> {
 
     return Scaffold(
       backgroundColor: Colors.green.shade100,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: Text(
-          'ลงทะเบียน',
-          style: TextStyle(color: Colors.white),
-        ),
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.of(context);
-          },
-        ),
-      ),
       body: Center(
         child: SingleChildScrollView(
-          child: Container(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(36.0),
-              child: Form(
-                key: _formKey,
+          child: SafeArea(
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Text(
                       'ลงทะเบียน',
-                      style: TextStyle(fontSize: 30),
+                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(height: 45),
-                    firstNameField,
-                    SizedBox(height: 20),
-                    lastNameField,
-                    SizedBox(height: 20),
-                    emailField,
-                    SizedBox(height: 20),
-                    passwordField,
-                    SizedBox(height: 20),
-                    confirmPasswordField,
-                    SizedBox(height: 20),
-                    fbsField,
-                    SizedBox(height: 20),
-                    weightField,
-                    SizedBox(height: 20),
-                    sexField,
-                    SizedBox(height: 20),
-                    occupationField,
-                    SizedBox(height: 20),
-                    favfoodField,
-                    SizedBox(height: 20),
-                    birthdayField,
-                    /*favfood1,
-                    SizedBox(height: 20),
-                    favfood1,
-                    SizedBox(height: 20),
-                    favfood1,
-                    SizedBox(height: 20),
-                    favfood1,
-                    SizedBox(height: 20),
-                    favfood1,
-                    SizedBox(height: 20),*/
-                    signupButton(),
+                    Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colours.snow,
+                      ),
+                      child: Column(
+                        children: [
+                          firstNameField,
+                          SizedBox(height: 20),
+                          lastNameField,
+                          SizedBox(height: 20),
+                          emailField,
+                          SizedBox(height: 20),
+                          passwordField,
+                          SizedBox(height: 20),
+                          confirmPasswordField,
+                          SizedBox(height: 20),
+                          fbsField,
+                          SizedBox(height: 20),
+                          weightField,
+                          SizedBox(height: 20),
+                          sexField,
+                          SizedBox(height: 20),
+                          occupationField,
+                          SizedBox(height: 20),
+                          favfoodField,
+                          SizedBox(height: 20),
+                          birthdayField,
+                          /*favfood1,
+                      SizedBox(height: 20),
+                      favfood1,
+                      SizedBox(height: 20),
+                      favfood1,
+                      SizedBox(height: 20),
+                      favfood1,
+                      SizedBox(height: 20),
+                      favfood1,
+                      SizedBox(height: 20),*/
+                          signupButton(),
+                        ],
+                      ),
+                    ),
                     SizedBox(height: 15),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -551,58 +549,67 @@ class _Register_screenState extends State<Register_screen> {
     return Container(
       margin: EdgeInsets.only(top: 16),
       width: screen * 0.75,
-      child: ElevatedButton(
-        onPressed: () async {
-          print('--------------- Email and Password ---------------');
-          bool validate = _formKey.currentState!.validate();
-          if (validate) {
-            check_user user_check = await new check_user();
-            var signup = await user_check.signup(
-                emailEditingController.text,
-                passwordEditingController.text,
-                firstNameEditingController.text,
-                lastNameEditingController.text,
-                birthdayEditingController.text,
-                jobEditingController.text,
-                weightEditingController.text,
-                fbsEditingController.text,
-                sexEditingController.text,
-                listfood.toString());
+      child: SizedBox(
+        width: 140,
+        height: 55,
+        child: ElevatedButton(
+          onPressed: () async {
+            print('--------------- Email and Password ---------------');
+            bool validate = _formKey.currentState!.validate();
+            if (validate) {
+              check_user user_check = await new check_user();
+              var signup = await user_check.signup(
+                  emailEditingController.text,
+                  passwordEditingController.text,
+                  firstNameEditingController.text,
+                  lastNameEditingController.text,
+                  birthdayEditingController.text,
+                  jobEditingController.text,
+                  weightEditingController.text,
+                  fbsEditingController.text,
+                  sexEditingController.text,
+                  listfood.toString());
 
-            if (await signup['message'] == "Signup Finishes") {
-              await AwesomeDialog(
-                context: context,
-                dialogType: DialogType.info,
-                animType: AnimType.topSlide,
-                showCloseIcon: true,
-                headerAnimationLoop: false,
-                title: 'Warning',
-                desc: 'กรุณายืนยัน E-mail เพื่อการสมัครสมาชิกที่สมบูรณ์',
-                btnOkOnPress: () {
-                },
-              ).show();
-              print("------------------pop up บอกกรุณายืนยัน Email------------------------");
-              MaterialPageRoute materialPageRoute = MaterialPageRoute(
-                  builder: (BuildContext context) => login_page());
-              Navigator.of(this.context).push(materialPageRoute);
-            } else {
-              Api apiRest = new Api();
-              var restFood = await apiRest.get_food();
-              print(signup['message']);
-              MaterialPageRoute materialPageRoute = MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      Register_screen(restFood: restFood));
-              Navigator.of(this.context).push(materialPageRoute);
+              if (await signup['message'] == "Signup Finishes") {
+                await AwesomeDialog(
+                  context: context,
+                  dialogType: DialogType.info,
+                  animType: AnimType.topSlide,
+                  showCloseIcon: true,
+                  headerAnimationLoop: false,
+                  title: 'Warning',
+                  desc: 'กรุณายืนยัน E-mail เพื่อการสมัครสมาชิกที่สมบูรณ์',
+                  btnOkOnPress: () {},
+                ).show();
+                print(
+                    "------------------pop up บอกกรุณายืนยัน Email------------------------");
+                MaterialPageRoute materialPageRoute = MaterialPageRoute(
+                    builder: (BuildContext context) => login_page());
+                Navigator.of(this.context).push(materialPageRoute);
+              } else {
+                Api apiRest = new Api();
+                var restFood = await apiRest.get_food();
+                print(signup['message']);
+                MaterialPageRoute materialPageRoute = MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        Register_screen(restFood: restFood));
+                Navigator.of(this.context).push(materialPageRoute);
+              }
+              print(firstNameEditingController.text);
+              print(lastNameEditingController.text);
             }
-            print(firstNameEditingController.text);
-            print(lastNameEditingController.text);
-          }
-        },
-        child: Text(
-          "ลงทะเบียน",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+          },
+          child: Text(
+            "ลงทะเบียน",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          style: ElevatedButton.styleFrom(
+              elevation: 5,
+              backgroundColor: Colors.green.shade400,
+              side: BorderSide.none,
+              shape: StadiumBorder()),
         ),
       ),
     );

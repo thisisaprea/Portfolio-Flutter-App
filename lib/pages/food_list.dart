@@ -1,11 +1,12 @@
 import 'package:animated_button_bar/animated_button_bar.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:colours/colours.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/Api.dart';
-import 'Food_Rec.dart';
+import 'onBoading.dart';
 
 class ItemList extends StatefulWidget {
   static const routeName = '/FoodItem';
@@ -26,20 +27,24 @@ class _ItemListState extends State<ItemList> {
   var id_user;
   DateTime dateTime = DateTime.now();
   var showContentbasedFood;
-  var titleActivity, titleFood;
+  var titleText, titleFood, subText, colorBox;
   var dateFood, dateActivity, meal = 'เช้า';
   var mealController = TextEditingController();
-  var statusChoose = 'contentbased';
-  List<String> lables = ['Content-based', 'Collaboretive'];
+  var statusChoose;
+  bool loading = false, loadingContent = false, loadingColl = false;
+  var number = 0;
+  var iconActivity;
+  var colorActivity;
   final List<String> categoryItems = ['เช้า', 'เที่ยง', 'เย็น'];
 
-  void getdataUser() async {
+  Future getdataUser() async {
     Api restContent = await new Api();
     pref = await SharedPreferences.getInstance();
     String formattedDate = DateFormat('ddMMyyyy').format(dateTime);
     var restId = await pref.getString("token");
     var showContentbasedFood =
         await restContent.get_contentbased(restId, formattedDate, meal);
+    loading = false;
     setState(() {
       print('111111111111111111111111111111111111');
       print(showContentbasedFood);
@@ -50,16 +55,17 @@ class _ItemListState extends State<ItemList> {
     });
   }
 
-  var number = 0;
-  var iconActivity;
-  var colorActivity;
+  void _onLoaing() {
+    setState(() {
+      loading = true;
+      new Future.delayed(new Duration(seconds: 2), getdataUser);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    /*for (var i in showContentbasedFood) {
-      number = number + 1;*/
-    //}
+    _onLoaing();
     getdataUser();
   }
 
@@ -67,8 +73,8 @@ class _ItemListState extends State<ItemList> {
   Widget build(BuildContext context) {
     final _buttonbarPage = AnimatedButtonBar(
       radius: 32.0,
-      padding: const EdgeInsets.all(16.0),
-      backgroundColor: Colors.deepOrange.shade400,
+      padding: const EdgeInsets.all(12.0),
+      backgroundColor: Colours.burntSienna,
       foregroundColor: Colors.white54,
       elevation: 24,
       borderColor: Colors.white,
@@ -76,22 +82,28 @@ class _ItemListState extends State<ItemList> {
       innerVerticalPadding: 16,
       children: [
         ButtonBarEntry(
-            onTap: () async {
-              statusChoose = 'contentbased';
-              pref = await SharedPreferences.getInstance();
-              String formattedDate = DateFormat('ddMMyyyy').format(dateTime);
-              var restId = await pref.getString("token");
-              Api restContentbased = await new Api();
-              showContentbasedFood = await restContentbased.get_contentbased(
-                  restId, formattedDate, meal);
-              setState(() {
-                titleFood.clear();
-                titleFood = showContentbasedFood['datauser'];
-                print('2222222222222222222222222222222222');
-                print(titleFood);
-              });
-            },
-            child: Text('Content-based')),
+          onTap: () async {
+            statusChoose = 'contentbased';
+            pref = await SharedPreferences.getInstance();
+            String formattedDate = DateFormat('ddMMyyyy').format(dateTime);
+            var restId = await pref.getString("token");
+            Api restContentbased = await new Api();
+            showContentbasedFood = await restContentbased.get_contentbased(
+                restId, formattedDate, meal);
+
+            setState(() {
+              loading = false;
+              titleFood.clear();
+              titleFood = showContentbasedFood['datauser'];
+              print('2222222222222222222222222222222222');
+              print(titleFood);
+            });
+          },
+          child: Text(
+            'Content-based',
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+          ),
+        ),
         ButtonBarEntry(
             onTap: () async {
               statusChoose = 'collaboretive';
@@ -101,20 +113,25 @@ class _ItemListState extends State<ItemList> {
               Api restContentbased = await new Api();
               showContentbasedFood = await restContentbased.get_collaboretive(
                   restId, formattedDate, meal);
+
               setState(() {
+                loading = false;
                 titleFood.clear();
                 titleFood = showContentbasedFood['datauser'];
                 print('3333333333333333333333333333333333333');
                 print(titleFood);
               });
             },
-            child: Text('Collaboretive')),
+            child: Text(
+              'Collaboretive',
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+            )),
       ],
     );
     return Scaffold(
+      backgroundColor: Colours.lightGoldenRodYellow.withOpacity(0.8),
       appBar: AppBar(
-          title: Text('แนะนำอาหาร'),
-          backgroundColor: Colors.deepOrange.shade400),
+          title: Text('แนะนำอาหาร'), backgroundColor: Colours.burntSienna),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => showDialog(
           context: context,
@@ -122,47 +139,79 @@ class _ItemListState extends State<ItemList> {
         ),
         label: const Text('เลือกมื้ออาหาร'),
         icon: const Icon(Icons.add),
-        backgroundColor: Colors.deepOrange.shade400,
+        backgroundColor: Colours.burntSienna.shade700,
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              height: 90,
-              color: Colors.deepOrange.shade400,
-              child: _buttonbarPage,
-            ),
-            Flexible(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListView.builder(
-                  physics: ScrollPhysics(parent: null),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: EdgeInsets.only(bottom: 8),
-                      padding: EdgeInsets.only(top: 10, left: 10, right: 10,bottom: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.lightGreen.shade300,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(20),
-                        ),
+        child: loading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : Column(
+                children: [
+                  Container(
+                    height: 90,
+                    color: Colours.white24.withOpacity(0.1),
+                    child: _buttonbarPage,
+                  ),
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8, left: 8),
+                      child: ListView.builder(
+                        physics: ScrollPhysics(parent: null),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          if (statusChoose == 'contentbased') {
+                            colorBox = Colours.darkGreen.withOpacity(0.6);
+                          } else if (statusChoose == 'collaboretive') {
+                            colorBox = Colours.cadetBlue;
+                          } else {
+                            colorBox = Colours.darkGreen.withOpacity(0.6);
+                          }
+                          return Container(
+                            margin: EdgeInsets.only(bottom: 8),
+                            padding: EdgeInsets.only(
+                                top: 10, left: 10, right: 10, bottom: 10),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.black, //color of border
+                                width: 2, //width of border
+                              ),
+                              color: colorBox,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(20),
+                              ),
+                            ),
+                            child: ListTile(
+                              trailing: Text(
+                                titleFood[index]['น้ำตาล'].toStringAsFixed(2),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              title: Text(
+                                titleFood[index]['ชื่อเมนู'],
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              //subtitle: Text(subText),
+                              leading: Icon(
+                                Icons.fastfood,
+                                color: Colors.white,
+                              ),
+                            ),
+                          );
+                        },
+                        itemCount: titleFood.length,
                       ),
-                      child: ListTile(
-                        trailing: Text(
-                            titleFood[index]['น้ำตาล'].toStringAsFixed(2)),
-                        title: Text(titleFood[index]['ชื่อเมนู']),
-                        //subtitle: Text(subText),
-                        leading: Icon(Icons.fastfood),
-                      ),
-                    );
-                  },
-                  itemCount: titleFood.length,
-                ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -1,7 +1,9 @@
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:colours/colours.dart';
 import 'package:flutter/material.dart';
-import 'package:highlight_text/highlight_text.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+
+import 'bottom_page.dart';
 
 class SpeechToText extends StatefulWidget {
   const SpeechToText({Key? key}) : super(key: key);
@@ -13,8 +15,9 @@ class SpeechToText extends StatefulWidget {
 class _SpeechToTextState extends State<SpeechToText> {
   bool _isListening = false;
   late stt.SpeechToText _speech;
-  String _text = 'Press the button and start speaking';
+  String _text = 'กดปุ่มเพื่อพูดและกดปุ่มอีกครั้งเมื่อพูดเสร็จแล้ว';
   double _confidence = 1.0;
+  String? mealText, foodText, CountmealText;
   TextEditingController _STTController = TextEditingController();
   @override
   void initState() {
@@ -66,6 +69,7 @@ class _SpeechToTextState extends State<SpeechToText> {
       child: FloatingActionButton(
         onPressed: _listen,
         child: Icon(_isListening ? Icons.mic : Icons.mic_none),
+        backgroundColor: Colours.darkGreen,
       ),
     );
   }
@@ -114,26 +118,22 @@ class _SpeechToTextState extends State<SpeechToText> {
 
   Widget addButton(BuildContext context) {
     return ElevatedButton(
-      onPressed: () async {},
+      onPressed: () async {
+        sttText = _STTController.text;
+        // mealText = sttText.toString().substring(4,8);
+        // foodText = sttText.toString().substring(8,);
+        print('//////////////////////////');
+        print(sttText);
+        print('//////////////////////////');
+
+        MaterialPageRoute materialPageRoute = MaterialPageRoute(
+            builder: (BuildContext context) => Bottom_Pages());
+        Navigator.of(this.context).push(materialPageRoute);
+      },
       child: Text('ตกลง'),
       style: ElevatedButton.styleFrom(
-          primary: Colors.green,
+          primary: Colours.darkGreen,
           textStyle: TextStyle(fontWeight: FontWeight.bold)),
     );
   }
 }
-/*return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: AvatarGlow(
-        animate: _isListening,
-        glowColor: Theme.of(context).primaryColor,
-        endRadius: 75.5,
-        duration: Duration(milliseconds: 2000),
-        repeatPauseDuration: Duration(milliseconds: 100),
-        repeat: true,
-        child: FloatingActionButton(
-          onPressed: _listen,
-          child: Icon(_isListening ? Icons.mic : Icons.mic_none),
-        ),
-      ),
-    );*/

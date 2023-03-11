@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:project_final/pages/FriendTextFields.dart';
 import 'package:project_final/pages/bottom_page.dart';
+import 'package:project_final/pages/onBoading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:project_final/pages/login.dart';
 
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
     }
     return MaterialApp(
 
-      home: page,
+      home:page,
     );
   }
 }

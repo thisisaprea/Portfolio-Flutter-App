@@ -1,17 +1,13 @@
 import 'dart:convert';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:colours/colours.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_final/controller/check_User.dart';
-import 'package:project_final/controller/user_model.dart';
-import 'package:project_final/pages/HomePage.dart';
-import 'package:project_final/pages/main_page.dart';
 import 'package:project_final/pages/register_screen.dart';
 import 'package:project_final/services/Api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../controller/User_Convert_data.dart';
 import 'bottom_page.dart';
 
 class login_page extends StatefulWidget {
@@ -179,27 +175,11 @@ class _login_pageState extends State<login_page> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.lightGreen.shade100,
-        appBar: AppBar(
-          backgroundColor: Colors.green.shade400,
-          title: Text(
-            'เข้าสู่ระบบ',
-            style: TextStyle(color: Colors.white),
-          ),
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () {
-              /*Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => main_page()));*/
-            },
-          ),
-        ),
+        backgroundColor: Colors.green.shade100,
         body: Center(
           child: SingleChildScrollView(
             child: Container(
-              color: Colors.white54,
-              padding: EdgeInsets.all(25),
+              padding: EdgeInsets.all(10),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -208,21 +188,39 @@ class _login_pageState extends State<login_page> {
                   children: <Widget>[
                     Image.asset(
                       "assets/images/Logo.png",
-                      width: 500.0,
-                      fit: BoxFit.contain,
+                      width: 300.0,
+                      //fit: BoxFit.contain,
                     ),
-                    Text(
-                      'เข้าสู่ระบบ',
-                      style: TextStyle(
-                          fontSize: 50, fontWeight: FontWeight.w400),
+                    Container(
+                      padding: EdgeInsets.only(right: 8,left: 8,top: 8,bottom: 2),
+                      decoration: BoxDecoration(
+                        color: Colours.whiteSmoke, //Colors.green.withOpacity(0.7),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30),
+                            bottomLeft: Radius.circular(30),
+                            bottomRight: Radius.circular(30)),
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            'เข้าสู่ระบบ',
+                            style: TextStyle(
+                                fontSize: 50, fontWeight: FontWeight.w400),
+                          ),
+                          SizedBox(height: 24),
+                          emailField,
+                          SizedBox(height: 15),
+                          passwordField,
+                          SizedBox(height: 15),
+                          loginButton,
+                          SizedBox(height: 15),
+
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 25),
-                    emailField,
-                    SizedBox(height: 25),
-                    passwordField,
-                    SizedBox(height: 35),
-                    loginButton,
                     SizedBox(height: 15),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[

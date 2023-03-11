@@ -1,15 +1,10 @@
-import 'package:easy_localization/easy_localization.dart';
+import 'package:colours/colours.dart';
 import 'package:flutter/material.dart';
-import 'package:project_final/pages/testPage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../services/Api.dart';
+import 'package:project_final/pages/onBoading.dart';
 import 'HomePage.dart';
-import 'Profile_User.dart';
-import 'SpeechToText.dart';
+import 'Profile_Page.dart';
 import 'food_list.dart';
-import 'history_daily.dart';
 import 'history_days.dart';
-import 'history_first.dart';
 
 class Bottom_Pages extends StatefulWidget {
   static const routeName = '/Bottom_Page';
@@ -49,20 +44,20 @@ class _Bottom_PagesState extends State<Bottom_Pages> {
           BottomNavigationBarItem(
               icon: Icon(Icons.home_max_outlined),
               label: 'หน้าหลัก',
-              backgroundColor: Colors.green.shade400,
+              backgroundColor: Colours.darkGreen.withOpacity(0.8),
               ),
           BottomNavigationBarItem(
               icon: Icon(Icons.food_bank_outlined),
               label: 'แนะนำอาหาร',
-            backgroundColor: Colors.green.shade400,),
+            backgroundColor: Colours.darkGreen.withOpacity(0.8),),
           BottomNavigationBarItem(
               icon: Icon(Icons.auto_graph_outlined),
               label: 'รายงาน',
-            backgroundColor: Colors.green.shade400,),
+            backgroundColor: Colours.darkGreen.withOpacity(0.8),),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle_outlined),
             label: 'โปรไฟล์',
-            backgroundColor: Colors.green.shade400,
+            backgroundColor: Colours.darkGreen.withOpacity(0.8),
           ),
         ],
         currentIndex: _selectedIndex,

@@ -74,9 +74,11 @@ class _history_dailyState extends State<history_daily> {
             Api restContent = await new Api();
             pref = await SharedPreferences.getInstance();
             var restId = await pref.getString("token");
-            showSelectAcitivityFood = await restContent.get_history(
+            restListActivity = await restContent.get_history(
                 restId, formatStart, formatEnd);
-            print(showSelectAcitivityFood);
+            print(restListActivity);
+            print(formatStart);
+            print(formatEnd);
           }
         },
         child: Text('Choose Dates'));

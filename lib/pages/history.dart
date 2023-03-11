@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:project_final/pages/history_daily.dart';
 
 class report_static extends StatefulWidget {
   static const routeName = '/History';
@@ -56,108 +54,209 @@ class _report_staticState extends State<report_static> {
               Flexible(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: ListView.builder(
-                    physics: ScrollPhysics(parent: null),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      if (title == 'การกิน') {
-                        titleText = restListActivity[index]['nameactivity'];
-                        subText = 'มื้อที่กิน : ' +
-                            restListActivity[index]['meal'] +
-                            " จำนวน : " +
-                            restListActivity[index]['amount'] +
-                            ' น้ำตาล : ' +
-                            restListActivity[index]['sugar']
-                                .toStringAsFixed(2) +
-                            '\nวันที่ ' +
-                            (restListActivity[index]['datetime'])
-                                .substring(0, 11) +
-                            ' เวลา ' +
-                            (restListActivity[index]['datetime']).substring(
-                                11,
-                                restListActivity[index]['datetime'].length) +
-                            ' น.';
-                      } else {
-                        titleText = restListActivity[index]['nameactivity'];
-                        subText = 'ระยะเวลาออกกำลังกาย : ' +
-                            restListActivity[index]['timestamp'] +
-                            ' น้ำตาล : ' +
-                            restListActivity[index]['sugar']
-                                .toStringAsFixed(2) +
-                            '\nวันที่ ' +
-                            (restListActivity[index]['datetime'])
-                                .substring(0, 11) +
-                            ' เวลา ' +
-                            (restListActivity[index]['datetime']).substring(
-                                11,
-                                restListActivity[index]['datetime'].length) +
-                            ' น.';
-                      }
-                      return Container(
-                        margin: EdgeInsets.only(bottom: 8),
-                        padding:
+                  child: ExpansionTile(
+                    title: Text('history'),
+                    children: [
+                      ListView.builder(
+                        physics: ScrollPhysics(parent: null),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          if (title == 'การกิน') {
+                            titleText = restListActivity[index]['nameactivity'];
+                            subText = 'มื้อที่กิน : ' +
+                                restListActivity[index]['meal'] +
+                                " จำนวน : " +
+                                restListActivity[index]['amount'] +
+                                ' น้ำตาล : ' +
+                                restListActivity[index]['sugar']
+                                    .toStringAsFixed(2) +
+                                '\nวันที่ ' +
+                                (restListActivity[index]['datetime'])
+                                    .substring(0, 11) +
+                                ' เวลา ' +
+                                (restListActivity[index]['datetime']).substring(
+                                    11,
+                                    restListActivity[index]['datetime'].length) +
+                                ' น.';
+                          } else {
+                            titleText = restListActivity[index]['nameactivity'];
+                            subText = 'ระยะเวลาออกกำลังกาย : ' +
+                                restListActivity[index]['timestamp'] +
+                                ' น้ำตาล : ' +
+                                restListActivity[index]['sugar']
+                                    .toStringAsFixed(2) +
+                                '\nวันที่ ' +
+                                (restListActivity[index]['datetime'])
+                                    .substring(0, 11) +
+                                ' เวลา ' +
+                                (restListActivity[index]['datetime']).substring(
+                                    11,
+                                    restListActivity[index]['datetime'].length) +
+                                ' น.';
+                          }
+                          return Container(
+                            margin: EdgeInsets.only(bottom: 8),
+                            padding:
                             EdgeInsets.only(top: 15, left: 10, right: 10),
-                        decoration: BoxDecoration(
-                          color: Colors.blueAccent.shade100,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                        ),
-                        child: ListTile(
-                          trailing: Icon(Icons.person_add_alt_1_outlined),
-                          title: Text(titleText),
-                          subtitle: Text(subText),
-                          leading: Icon(Icons.add),
-                        ),
-                      );
-                    },
-                    itemCount: number,
+                            decoration: BoxDecoration(
+                              color: Colors.blueAccent.shade100,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(20),
+                              ),
+                            ),
+                            child: ListTile(
+                              trailing: Icon(Icons.person_add_alt_1_outlined),
+                              title: Text(titleText),
+                              subtitle: Text(subText),
+                              leading: Icon(Icons.add),
+                            ),
+                          );
+                        },
+                        itemCount: number,
+                      ),
+                    ],
                   ),
                 ),
               ),
               SizedBox(
                 height: 10,
               ),
-              /*InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => report_static()));
-                },
-                child: Padding(
-                  padding: EdgeInsets.only(top: 24, left: 10, right: 10),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height / 5,
-                    decoration: BoxDecoration(
-                      color: Colors.blueAccent.shade100,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(20),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 5, left: 24, right: 24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '24/02/2023',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 30.0,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ExpansionTile(
+                  title: Text('history'),
+                  children: [
+                    ListView.builder(
+                      physics: ScrollPhysics(parent: null),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        if (title == 'การกิน') {
+                          titleText = restListActivity[index]['nameactivity'];
+                          subText = 'มื้อที่กิน : ' +
+                              restListActivity[index]['meal'] +
+                              " จำนวน : " +
+                              restListActivity[index]['amount'] +
+                              ' น้ำตาล : ' +
+                              restListActivity[index]['sugar']
+                                  .toStringAsFixed(2) +
+                              '\nวันที่ ' +
+                              (restListActivity[index]['datetime'])
+                                  .substring(0, 11) +
+                              ' เวลา ' +
+                              (restListActivity[index]['datetime']).substring(
+                                  11,
+                                  restListActivity[index]['datetime'].length) +
+                              ' น.';
+                        } else {
+                          titleText = restListActivity[index]['nameactivity'];
+                          subText = 'ระยะเวลาออกกำลังกาย : ' +
+                              restListActivity[index]['timestamp'] +
+                              ' น้ำตาล : ' +
+                              restListActivity[index]['sugar']
+                                  .toStringAsFixed(2) +
+                              '\nวันที่ ' +
+                              (restListActivity[index]['datetime'])
+                                  .substring(0, 11) +
+                              ' เวลา ' +
+                              (restListActivity[index]['datetime']).substring(
+                                  11,
+                                  restListActivity[index]['datetime'].length) +
+                              ' น.';
+                        }
+                        return Container(
+                          margin: EdgeInsets.only(bottom: 8),
+                          padding:
+                          EdgeInsets.only(top: 15, left: 10, right: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.blueAccent.shade100,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(20),
                             ),
                           ),
-                        ],
-                      ),
+                          child: ListTile(
+                            trailing: Icon(Icons.person_add_alt_1_outlined),
+                            title: Text(titleText),
+                            subtitle: Text(subText),
+                            leading: Icon(Icons.add),
+                          ),
+                        );
+                      },
+                      itemCount: number,
                     ),
-                  ),
+                  ],
                 ),
-              ),*/
+              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+  Widget ExpansionWidget(){
+    return Flexible(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ExpansionTile(
+          title: Text('history'),
+          children: [
+            ListView.builder(
+              physics: ScrollPhysics(parent: null),
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                if (title == 'การกิน') {
+                  titleText = restListActivity[index]['nameactivity'];
+                  subText = 'มื้อที่กิน : ' +
+                      restListActivity[index]['meal'] +
+                      " จำนวน : " +
+                      restListActivity[index]['amount'] +
+                      ' น้ำตาล : ' +
+                      restListActivity[index]['sugar']
+                          .toStringAsFixed(2) +
+                      '\nวันที่ ' +
+                      (restListActivity[index]['datetime'])
+                          .substring(0, 11) +
+                      ' เวลา ' +
+                      (restListActivity[index]['datetime']).substring(
+                          11,
+                          restListActivity[index]['datetime'].length) +
+                      ' น.';
+                } else {
+                  titleText = restListActivity[index]['nameactivity'];
+                  subText = 'ระยะเวลาออกกำลังกาย : ' +
+                      restListActivity[index]['timestamp'] +
+                      ' น้ำตาล : ' +
+                      restListActivity[index]['sugar']
+                          .toStringAsFixed(2) +
+                      '\nวันที่ ' +
+                      (restListActivity[index]['datetime'])
+                          .substring(0, 11) +
+                      ' เวลา ' +
+                      (restListActivity[index]['datetime']).substring(
+                          11,
+                          restListActivity[index]['datetime'].length) +
+                      ' น.';
+                }
+                return Container(
+                  margin: EdgeInsets.only(bottom: 8),
+                  padding:
+                  EdgeInsets.only(top: 15, left: 10, right: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.blueAccent.shade100,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20),
+                    ),
+                  ),
+                  child: ListTile(
+                    trailing: Icon(Icons.person_add_alt_1_outlined),
+                    title: Text(titleText),
+                    subtitle: Text(subText),
+                    leading: Icon(Icons.add),
+                  ),
+                );
+              },
+              itemCount: number,
+            ),
+          ],
         ),
       ),
     );

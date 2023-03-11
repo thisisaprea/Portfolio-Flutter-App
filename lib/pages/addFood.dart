@@ -1,7 +1,9 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:colours/colours.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:project_final/pages/SpeechToText.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,7 +15,6 @@ class history_second extends StatefulWidget {
   static const routeName = '/history_second';
   final LastTime? lastTime;
   final Function onFinish;
-
 
   history_second({
     Key? key,
@@ -30,13 +31,17 @@ class _history_secondState extends State<history_second> {
   var _selectedMenu;
   var mealController = TextEditingController();
   var mealAmountController = TextEditingController();
+  final TextEditingController textEditingController = TextEditingController();
+  final TextEditingController sugarEditingController = TextEditingController();
+  final TextEditingController timeEditingController = TextEditingController();
+  TimeOfDay time = TimeOfDay(hour: 10, minute: 30);
   final List<String> categoryItems = [
     'เช้า',
     'เที่ยง',
     'เย็น',
   ];
   var id_user;
-  bool loading = false;
+  bool loading = true;
 
   void getdataUser() async {
     pref = await SharedPreferences.getInstance();
@@ -52,19 +57,21 @@ class _history_secondState extends State<history_second> {
   var listFood;
   late SharedPreferences pref;
 
-  void getdataFood() async {
+
+  Future getdataFood() async {
     Api restActivity = new Api();
     var restfood = await restActivity.get_food();
+    loading = false;
     setState(() {
-      loading = true;
       listFood = restfood;
     });
-    loading = false;
+
   }
 
   @override
   void initState() {
     super.initState();
+
     getdataFood();
     _selectedCategory = categoryItems.elementAt(0);
     getdataUser();
@@ -74,33 +81,80 @@ class _history_secondState extends State<history_second> {
   Widget build(BuildContext context) {
     final isEditing = widget.lastTime != null;
     final title = isEditing ? 'Edit LastTime' : 'Add LastTime';
-    return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      title: Text(
-        title,
-        textAlign: TextAlign.center,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-      ),
-      buttonPadding: const EdgeInsets.only(right: 24),
-      elevation: 24.0,
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          mealDropdown(),
-          SizedBox(height: 10),
-          foodField(),
-          SizedBox(height: 10),
-          mealField(),
+    return SingleChildScrollView(
+      child: AlertDialog(
+        backgroundColor: Colours.beige,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: Text(
+          title,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        buttonPadding: const EdgeInsets.only(right: 24),
+        elevation: 24.0,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colours.snow,
+              ),
+              child: Column(
+                children: [
+                  mealDropdown(),
+                  SizedBox(height: 10),
+                  foodField(),
+                  SizedBox(height: 10),
+                  mealField(),
+                ],
+              ),
+            ),
+            Divider(height: 24,color: Colours.white),
+            Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colours.snow,
+              ),
+              child: Column(
+                children: [
+                  sugarField(),
+                  SizedBox(height: 10),
+                  _TimePicker(),
+                ],
+              ),
+            ),
+
+          ],
+        ),
+        actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: Row(
+              children: [
+                Container(
+                    width: 95,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: Colours.darkGreen.shade400,
+                    ),
+                    child: micButton(context)),
+                SizedBox(
+                  width: 24,
+                ),
+                cancelButton(context),
+                SizedBox(
+                  width: 10,
+                ),
+                addButton(context, isEditing: isEditing),
+              ],
+            ),
+          ),
+
         ],
       ),
-      actions: <Widget>[
-        micButton(context),
-        SizedBox(
-          width: 30,
-        ),
-        cancelButton(context),
-        addButton(context, isEditing: isEditing),
-      ],
     );
   }
 
@@ -118,7 +172,7 @@ class _history_secondState extends State<history_second> {
               });
             },
             items: categoryItems.map<DropdownMenuItem<String>>(
-                  (String value) {
+              (String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
@@ -129,6 +183,7 @@ class _history_secondState extends State<history_second> {
               contentPadding: EdgeInsets.fromLTRB(20, 5, 5, 10),
               hintText: "มื้ออาหาร",
               border: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black, width: 2),
                 borderRadius: BorderRadius.circular(10),
               ),
               //textInputAction: TextInputAction.next,
@@ -142,7 +197,8 @@ class _history_secondState extends State<history_second> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text('Food', style: TextStyle(fontWeight: FontWeight.bold)),
-        DropdownButtonFormField2(
+        loading? Center(child: CircularProgressIndicator(),)
+            :DropdownButtonFormField2(
           validator: (value) => value == null ? "กรุณาเลือกเมนู" : null,
           onChanged: (menuValue) {
             setState(() {
@@ -150,7 +206,7 @@ class _history_secondState extends State<history_second> {
             });
           },
           items: listFood.map<DropdownMenuItem<String>>(
-                (String value) {
+            (String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),
@@ -181,6 +237,7 @@ class _history_secondState extends State<history_second> {
                 hintText: 'ค้นหาเมนู...',
                 hintStyle: const TextStyle(fontSize: 12),
                 border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.deepPurple),
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
@@ -204,7 +261,7 @@ class _history_secondState extends State<history_second> {
             contentPadding: EdgeInsets.fromLTRB(20, 5, 5, 10),
             hintText: "เมนู",
             border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.deepPurple),
+              borderSide: BorderSide(color: Colors.black, width: 2),
               borderRadius: BorderRadius.circular(10),
             ),
             //textInputAction: TextInputAction.next,
@@ -238,7 +295,7 @@ class _history_secondState extends State<history_second> {
             contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
             hintText: "จำนวนมื้ออาหาร",
             border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.deepPurple),
+              borderSide: BorderSide(color: Colors.black, width: 2),
               borderRadius: BorderRadius.circular(10),
             ),
           ),
@@ -249,13 +306,91 @@ class _history_secondState extends State<history_second> {
 
   Widget micButton(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.mic),
+      icon: Icon(Icons.mic, color: Colors.white,),
       onPressed: () {
         showDialog(
-            context: context,
-            builder: (context) => SpeechToText(),);
-
+          context: context,
+          builder: (context) => SpeechToText(),
+        );
       },
+    );
+  }
+  Widget _TimePicker(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('ใส่เวลาย้อนหลัง(ถ้ามี)', style: TextStyle(fontWeight: FontWeight.bold)),
+        TextFormField(
+          autofocus: false,
+          controller: timeEditingController,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return ("");
+            }
+            return null;
+          },
+          onSaved: (value) {
+            timeEditingController.text = value!;
+          },
+          decoration: InputDecoration(
+            labelText: 'ใส่เวลาย้อนหลัง',
+            prefixIcon: Icon(LineAwesomeIcons.clock),
+            contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+            hintText: "เวลาย้อนหลัง",
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black, width: 2),
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          readOnly: true,
+          onTap: () async {
+            TimeOfDay? pickedTime = await showTimePicker(
+              context: context,
+              initialTime: time,
+            );
+            if (pickedTime != null) {
+              print(pickedTime);
+              //String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+              //print(formattedDate);
+              setState(() {
+                timeEditingController.text = pickedTime.toString(); //set output date to TextField value.
+              });
+            } else {}
+          },
+        ),
+      ],
+    );
+  }
+  Widget sugarField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('ใส่ค่าน้ำตาลที่ปรุง(ถ้ามี)', style: TextStyle(fontWeight: FontWeight.bold)),
+        TextFormField(
+          autofocus: false,
+          controller: sugarEditingController,
+          keyboardType: TextInputType.number,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return ("");
+            }
+            return null;
+          },
+          onSaved: (value) {
+            sugarEditingController.text = value!;
+          },
+          textInputAction: TextInputAction.next,
+          decoration: InputDecoration(
+            prefixIcon: Icon(LineAwesomeIcons.utensil_spoon),
+            contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+            hintText: "ค่าน้ำตาลที่ปรุง(ช้อนชา)",
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black, width: 2),
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -264,7 +399,7 @@ class _history_secondState extends State<history_second> {
       onPressed: () {
         Navigator.of(context).pop();
       },
-      child: Text('Cancel'),
+      child: Text('ยกเลิก'),
       style: ElevatedButton.styleFrom(
           primary: Colors.black.withOpacity(0.8),
           textStyle: TextStyle(fontWeight: FontWeight.bold)),
@@ -272,14 +407,14 @@ class _history_secondState extends State<history_second> {
   }
 
   Widget addButton(BuildContext context, {required bool isEditing}) {
-    final text = isEditing ? 'Save' : 'Add';
+    final text = 'ตกลง';
     return ElevatedButton(
       child: Text(text),
       onPressed: () async {
         final food = foodController.text;
         final mealtime = mealAmountController.text;
-        String formattedDateTime = DateFormat('dd/MM/yyyy H:m:s').format(
-            dateLast);
+        String formattedDateTime =
+            DateFormat('dd/MM/yyyy H:m:s').format(dateLast);
         String formattedDate = DateFormat('ddMMyyyy').format(dateLast);
         print('food name $food');
         print('cateogry $mealController.text');
@@ -289,19 +424,9 @@ class _history_secondState extends State<history_second> {
         print('Datetime $formattedDate');
         if (food != '' && mealController != '' && mealtime != '') {
           Api setDataToApi = await new Api();
-          var setData = await setDataToApi.add_foodinput(
-              id_user, formattedDate, formattedDateTime, food, mealtime,
-              mealController.text);
+          var setData = await setDataToApi.add_foodinput(id_user, formattedDate,
+              formattedDateTime, food, mealtime, mealController.text);
           if (await setData["message"] == 'success') {
-            //Navigator.of(context).pop();
-            //var getLastmeal = await setDataToApi.show_food(id_user, formattedDate)
-            /*var suGar = await setDataToApi.get_sugar(id_user, formattedDate);
-          print('น้ำตาล ${suGar['sugar']['sugar']}');
-          var callContentbased = await setDataToApi.get_contentbased(id_user, formattedDate);
-          if(await callContentbased["message"] == 'success'){
-            print("------------------------------------------");
-            print(callContentbased["datauser"]);*/
-
             print("------------------------------------------");
             ///////push to next page///
             MaterialPageRoute materialPageRoute = MaterialPageRoute(
@@ -319,13 +444,11 @@ class _history_secondState extends State<history_second> {
             desc: 'กรุณากรอกชื่ออาหาร หรือมื้ออาหาร และจำนวนอาหาร',
             btnOkOnPress: () {},
           ).show();
-        };
+        }
+        ;
       },
-      //widget.onFinish(food, _selectedCategory, mealtime);
-
-
       style: ElevatedButton.styleFrom(
-          primary: Colors.green,
+          primary: Colours.darkGreen,
           textStyle: TextStyle(fontWeight: FontWeight.bold)),
     );
   }
