@@ -121,8 +121,6 @@ class _history_secondState extends State<history_second> {
               child: Column(
                 children: [
                   sugarField(),
-                  SizedBox(height: 10),
-                  _TimePicker(),
                 ],
               ),
             ),

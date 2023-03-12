@@ -316,7 +316,9 @@ class Api {
       }),
     );
     if (response.statusCode == 200) {
+      print('---------------------------------');
       print(jsonDecode(response.body));
+      print('---------------------------------');
       return (jsonDecode(response.body));
     } else {
       throw Exception('Not Found');

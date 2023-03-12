@@ -1,9 +1,8 @@
-import 'dart:convert';
 
-import 'package:colours/colours.dart';
+
 import 'package:custom_searchable_dropdown/custom_searchable_dropdown.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:dropdown_search/dropdown_search.dart';
+
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -61,9 +60,8 @@ class _onBoardingState extends State<onBoarding> {
     });
   }
 
-
   Widget build(BuildContext context) {
-   /* final favfoodField = loading
+    /*final favfoodField = loading
         ? Center(
             child: CircularProgressIndicator(),
           )
@@ -136,28 +134,32 @@ class _onBoardingState extends State<onBoarding> {
           );*/
     final multiSelect = loading
         ? Center(
-      child: CircularProgressIndicator(),
-    )
-        :CustomSearchableDropDown(
-      items: listFood,
-      label: 'เลือกเมนูอาหารที่ชอบ',
-      //multiSelectTag: 'Names',
-      multiSelectValuesAsWidget: true,
-      decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
-      multiSelect: true,
-      prefixIcon: Padding(
-        padding: const EdgeInsets.all(0.0),
-        child: Icon(Icons.search),
-      ),
-      dropDownMenuItems: listFood.map((item) {
-        return item.toString();
-      }).toList(),
-      onChanged: (value) {
-        print(value);
-        selected = value!;
-        print(selected);
-      },
-    );
+            child: CircularProgressIndicator(),
+          )
+        : CustomSearchableDropDown(
+            items: listFood,
+            label: 'เลือกเมนูอาหารที่ชอบ',
+            //multiSelectTag: 'Names',
+            multiSelectValuesAsWidget: true,
+            decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
+            multiSelect: true,
+            prefixIcon: Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: Icon(Icons.search),
+            ),
+            dropDownMenuItems: listFood.map((item) {
+              return item.toString();
+            }).toList(),
+            onChanged: (value) {
+              if(value != null){
+                print(value);
+                selected = value!;
+                print(selected);
+              }else{
+                Text('กรุณากรอก');
+              }
+            },
+          );
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepOrange.shade400,

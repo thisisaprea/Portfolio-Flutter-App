@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:colours/colours.dart';
 import 'package:custom_searchable_dropdown/custom_searchable_dropdown.dart';
@@ -41,10 +43,13 @@ class _Register_screenState extends State<Register_screen> {
   String? errorMessage;
   bool _isObscure = true;
   bool _isObscurere = true;
+  bool _validate = false;
   final _formKey = GlobalKey<FormState>();
   String? dropdownValue = '';
   var _selectedMenu;
   var selectedjobs;
+  var sub;
+  var result;
   DateTime dateTime = DateTime.now();
   List<String> jobList = [
     'รับจ้างอิสระ',
@@ -63,17 +68,30 @@ class _Register_screenState extends State<Register_screen> {
   ];
 
   // editing Controller
-  final TextEditingController userNameEditingController = new TextEditingController();
-  final TextEditingController firstNameEditingController = new TextEditingController();
-  final TextEditingController lastNameEditingController = new TextEditingController();
-  final TextEditingController emailEditingController = new TextEditingController();
-  final TextEditingController passwordEditingController = new TextEditingController();
-  final TextEditingController confirmPasswordEditingController = new TextEditingController();
-  final TextEditingController fbsEditingController = new TextEditingController();
-  final TextEditingController jobEditingController = new TextEditingController();
-  final TextEditingController sexEditingController = new TextEditingController();
-  final TextEditingController birthdayEditingController = new TextEditingController();
-  final TextEditingController weightEditingController = new TextEditingController();
+  final TextEditingController userNameEditingController =
+      new TextEditingController();
+  final TextEditingController firstNameEditingController =
+      new TextEditingController();
+  final TextEditingController lastNameEditingController =
+      new TextEditingController();
+  final TextEditingController emailEditingController =
+      new TextEditingController();
+  final TextEditingController passwordEditingController =
+      new TextEditingController();
+  final TextEditingController confirmPasswordEditingController =
+      new TextEditingController();
+  final TextEditingController fbsEditingController =
+      new TextEditingController();
+  final TextEditingController jobEditingController =
+      new TextEditingController();
+  final TextEditingController sexEditingController =
+      new TextEditingController();
+  final TextEditingController birthdayEditingController =
+      new TextEditingController();
+  final TextEditingController weightEditingController =
+      new TextEditingController();
+  final TextEditingController menuEditingController =
+      new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -288,15 +306,24 @@ class _Register_screenState extends State<Register_screen> {
         return item.toString();
       }).toList(),
       onChanged: (value) {
+        print(value);
+        var stringCast;
         setState(() {
-          print(value);
-          _selectedMenu = value!;
+          //var castToList = jsonDecode(value);
+          _selectedMenu = value.toString();
+          stringCast = _selectedMenu.toString();
           print(_selectedMenu);
-
+          var lengthStr = stringCast.length;
+          var sub = stringCast.substring(1, lengthStr - 1);
+          result = sub.replaceAll('"', "");
+          print(result.length);
+          if (result.length == 0) {
+            _validate = false;
+          } else {
+            _validate = true;
+          }
         });
-
       },
-
     );
 
     final emailField = TextFormField(
@@ -413,7 +440,8 @@ class _Register_screenState extends State<Register_screen> {
                   children: <Widget>[
                     Text(
                       'ลงทะเบียน',
-                      style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
                     Container(
                       padding: EdgeInsets.all(8),
@@ -441,19 +469,9 @@ class _Register_screenState extends State<Register_screen> {
                           SizedBox(height: 20),
                           occupationField,
                           SizedBox(height: 20),
-                          multiSelect,
-                          SizedBox(height: 20),
                           birthdayField,
-                          /*favfood1,
-                      SizedBox(height: 20),
-                      favfood1,
-                      SizedBox(height: 20),
-                      favfood1,
-                      SizedBox(height: 20),
-                      favfood1,
-                      SizedBox(height: 20),
-                      favfood1,
-                      SizedBox(height: 20),*/
+                          SizedBox(height: 20),
+                          multiSelect,
                           signupButton(),
                         ],
                       ),
@@ -516,7 +534,7 @@ class _Register_screenState extends State<Register_screen> {
                   weightEditingController.text,
                   fbsEditingController.text,
                   sexEditingController.text,
-                 _selectedMenu.toString());
+                  result.toString());
 
               if (await signup['message'] == "Signup Finishes") {
                 await AwesomeDialog(
@@ -540,13 +558,15 @@ class _Register_screenState extends State<Register_screen> {
                 var restFoodMap = await apiRest.get_food_map();
                 print(signup['message']);
                 MaterialPageRoute materialPageRoute = MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        Register_screen(restFood: restFood, restApiFood: restFoodMap,));
+                    builder: (BuildContext context) => Register_screen(
+                          restFood: restFood,
+                          restApiFood: restFoodMap,
+                        ));
                 Navigator.of(this.context).push(materialPageRoute);
               }
               print(firstNameEditingController.text);
               print(lastNameEditingController.text);
-              print(_selectedMenu);
+              print(result.toString());
             }
           },
           child: Text(

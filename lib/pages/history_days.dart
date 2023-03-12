@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/Api.dart';
@@ -20,7 +21,6 @@ class _history_todayState extends State<history_today> {
   var _start;
   var _end;
   var listHistory;
-  var title = 'ประวัติกิจกรรมของวันนี้';
   var textToast;
   var restListActivity;
   bool showDate = true;
@@ -47,7 +47,7 @@ class _history_todayState extends State<history_today> {
     pref = await SharedPreferences.getInstance();
     String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
     var restId = await pref.getString("token");
-    restListActivity = await restContent.get_history(restId, "02/03/2023", "11/03/2023");
+    restListActivity = await restContent.get_history(restId, formattedDate, formattedDate);
     loading = false;
     setState(() {
       try {
@@ -65,7 +65,7 @@ class _history_todayState extends State<history_today> {
       print(formattedDate);
     });
   }
-
+  var index = 0;
   @override
   void initState() {
     super.initState();
@@ -95,20 +95,24 @@ class _history_todayState extends State<history_today> {
 
         Api restContent = await new Api();
         pref = await SharedPreferences.getInstance();
+        var lengthRest;
         //String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
         var restId = await pref.getString("token");
         showDate = false;
         restListActivity = await restContent.get_history(restId, formatStart, formatEnd);
-        setState(() {
-          print('222222222222222222222222222222222222');
-          print(restListActivity);
-          print('222222222222222222222222222222222222');
-          listHistory = restListActivity['data_history'][0];
-          print(listHistory);
-          print('2222222222222222222222222222222222222');
-          print(formatStart);
-          print(formatEnd);
-        });
+          setState(() {
+            print('222222data_history222222');
+            lengthRest = restListActivity['data_history'];
+            print(lengthRest);
+            print('222222data_history2222222');
+            listHistory = restListActivity['data_history'][0];
+            print(listHistory);
+            print('2222222222222222222222222222222222222');
+            print(formatStart);
+            print(formatEnd);
+          });
+
+
       },
       child: Text('เลือกวันที่'),
       style: ElevatedButton.styleFrom(
@@ -133,15 +137,28 @@ class _history_todayState extends State<history_today> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [ showDate? Center(child: Text('',),)
-                    : Center(
-                    child: Text(
-                      '${formatStart} - ${formatEnd}',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 15),
-                    ),
+                    : Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                  padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colours.cornFlowerBlue.withOpacity(0.3),
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
+                        ),
+                        child: Center(
+                        child: Text(
+                          '${formatStart} - ${formatEnd}',
+                          style: GoogleFonts.notoSerifThai(
+                            textStyle: TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
                   ),
+                      ),
+                    ),
                   selectDateButton,
                 ],
               ),
@@ -180,7 +197,7 @@ class _history_todayState extends State<history_today> {
                             colorText = Colors.white;
                             print('//////////////////////////////////////////////');
                             titleText = listHistory[index]['nameactivity'];
-                            subText = 'ระยะเวลาออกกำลังกาย : ' +
+                            subText = 'ระยะเวลา : ' +
                                 listHistory[index]['timestamp'] +
                                 '\nวันที่ ' +
                                 (listHistory[index]['datetime']).substring(0, 11) +
@@ -209,11 +226,23 @@ class _history_todayState extends State<history_today> {
                                   listHistory[index]['sugar'].toStringAsFixed(2),style: TextStyle(fontSize: 18, color: colorText),),
                               title: Text(
                                 titleText,
-                                style: TextStyle(fontSize: 18, color: colorText),
+                                style: GoogleFonts.notoSerifThai(
+                                  textStyle: TextStyle(
+                                    color: colorText,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                  ),
+                                ),
                               ),
                               subtitle: Text(
                                 subText,
-                                style: TextStyle(fontSize: 18, color: colorText),
+                                style: GoogleFonts.notoSerifThai(
+                                  textStyle: TextStyle(
+                                    color: colorText,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 18,
+                                  ),
+                                ),
                               ),
                               leading: Icon(iconActivity),
                             ),
