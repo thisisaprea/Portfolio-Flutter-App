@@ -82,76 +82,78 @@ class _history_secondState extends State<history_second> {
     final isEditing = widget.lastTime != null;
     final title = isEditing ? 'Edit LastTime' : 'Add LastTime';
     return SingleChildScrollView(
-      child: AlertDialog(
-        backgroundColor: Colours.beige,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        title: Text(
-          title,
-          textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        ),
-        buttonPadding: const EdgeInsets.only(right: 24),
-        elevation: 24.0,
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colours.snow,
+      child: Center(
+        child: AlertDialog(
+          backgroundColor: Colours.beige,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          title: Text(
+            'เพิ่มการกิน',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+          buttonPadding: const EdgeInsets.only(right: 24),
+          elevation: 24.0,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colours.snow,
+                ),
+                child: Column(
+                  children: [
+                    mealDropdown(),
+                    SizedBox(height: 10),
+                    foodField(),
+                    SizedBox(height: 10),
+                    mealField(),
+                  ],
+                ),
               ),
-              child: Column(
+              Divider(height: 24,color: Colours.white),
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colours.snow,
+                ),
+                child: Column(
+                  children: [
+                    sugarField(),
+                  ],
+                ),
+              ),
+
+            ],
+          ),
+          actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Row(
                 children: [
-                  mealDropdown(),
-                  SizedBox(height: 10),
-                  foodField(),
-                  SizedBox(height: 10),
-                  mealField(),
-                ],
-              ),
-            ),
-            Divider(height: 24,color: Colours.white),
-            Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colours.snow,
-              ),
-              child: Column(
-                children: [
-                  sugarField(),
+                  Container(
+                      width: 95,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: Colours.darkGreen.shade400,
+                      ),
+                      child: micButton(context)),
+                  SizedBox(
+                    width: 24,
+                  ),
+                  cancelButton(context),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  addButton(context, isEditing: isEditing),
                 ],
               ),
             ),
 
           ],
         ),
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: Row(
-              children: [
-                Container(
-                    width: 95,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Colours.darkGreen.shade400,
-                    ),
-                    child: micButton(context)),
-                SizedBox(
-                  width: 24,
-                ),
-                cancelButton(context),
-                SizedBox(
-                  width: 10,
-                ),
-                addButton(context, isEditing: isEditing),
-              ],
-            ),
-          ),
-
-        ],
       ),
     );
   }
@@ -252,7 +254,7 @@ class _history_secondState extends State<history_second> {
           value: _selectedMenu,
           isExpanded: true,
           hint: Text(
-            "เลือกเมนูโปรด",
+            "เลือกเมนู",
           ),
           decoration: InputDecoration(
             //prefixIcon: Icon(Icons.fastfood),
@@ -429,7 +431,7 @@ class _history_secondState extends State<history_second> {
         if (food != '' && mealController != '' && mealtime != '') {
           Api setDataToApi = await new Api();
           var setData = await setDataToApi.add_foodinput(id_user, formattedDate,
-              formattedDateTime, food, mealtime, mealController.text);
+              formattedDateTime, food, '',mealtime, mealController.text,sugarEditingController.text);
           if (await setData["message"] == 'success') {
             print("------------------------------------------");
             ///////push to next page///
@@ -440,16 +442,16 @@ class _history_secondState extends State<history_second> {
         } else {
           AwesomeDialog(
             context: context,
-            dialogType: DialogType.warning,
+            dialogType: DialogType.error,
             animType: AnimType.topSlide,
             showCloseIcon: true,
             headerAnimationLoop: false,
-            title: 'Warning',
-            desc: 'กรุณากรอกชื่ออาหาร หรือมื้ออาหาร และจำนวนอาหาร',
+            title: 'เกิดข้อผิดพลาด',
+            desc: 'กรุณากรอกชื่ออาหาร มื้ออาหาร และจำนวนอาหาร',
             btnOkOnPress: () {},
+            btnOkColor: Colors.yellow.shade700
           ).show();
-        }
-        ;
+        };
       },
       style: ElevatedButton.styleFrom(
           primary: Colours.darkGreen,

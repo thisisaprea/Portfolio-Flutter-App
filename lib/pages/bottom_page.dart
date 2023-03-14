@@ -1,6 +1,8 @@
 import 'package:colours/colours.dart';
 import 'package:flutter/material.dart';
+import 'package:project_final/pages/FriendTextFields.dart';
 import 'package:project_final/pages/onBoading.dart';
+import 'package:project_final/pages/test.dart';
 import 'HomePage.dart';
 import 'Profile_Page.dart';
 import 'food_list.dart';

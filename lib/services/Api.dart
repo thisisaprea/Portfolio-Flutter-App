@@ -206,7 +206,7 @@ class Api {
       throw Exception('Not Found');
     }
   }
-  add_foodinput(tokenID, dateFormat,datetime, menu, amount, meal) async {
+  add_foodinput(tokenID, dateFormat,datetime, menu, text,amount, meal,sugar) async {
     final http.Response response = await http.post(
       Uri.parse("http://10.0.2.2:8000/insert_food/"),
       headers: <String, String>{
@@ -217,8 +217,10 @@ class Api {
         'dateformat' : await dateFormat,
         'datetime' : await datetime,
         'menu' : await menu,
+        'text' : await text,
         'amount' : await amount,
         'meal' : await meal,
+        'insert_sugar' : await sugar,
       }),
     );
     if (response.statusCode == 200) {
@@ -333,6 +335,46 @@ class Api {
       },
       body: jsonEncode(<String, String>{
         'email': await email,
+      }),
+    );
+    if (response.statusCode == 200) {
+      print(jsonDecode(response.body));
+      return (jsonDecode(response.body));
+    } else {
+      throw Exception('Failed.');
+    }
+  }
+  update_user(uid, email, firstname, lastname,job,weight, fbs) async {
+    final http.Response response = await http.post(
+      Uri.parse("http://10.0.2.2:8000/update_datauser/"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'uid': await uid,
+        'email': await email,
+        'firstname': await firstname,
+        'lastname': await lastname,
+        'job': await job,
+        'weight': await weight,
+        'fbs': await fbs,
+      }),
+    );
+    if (response.statusCode == 200) {
+      print(jsonDecode(response.body));
+      return (jsonDecode(response.body));
+    } else {
+      throw Exception('Failed.');
+    }
+  }
+  get_user(uid) async {
+    final http.Response response = await http.post(
+      Uri.parse("http://10.0.2.2:8000/get_datauser/"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'uid': await uid,
       }),
     );
     if (response.statusCode == 200) {

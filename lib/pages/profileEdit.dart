@@ -51,101 +51,74 @@ class _ProfileEditState extends State<ProfileEdit> {
         ),
       ),
     );
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Edit Profile'),
-        backgroundColor: Colors.amber.shade500,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(12),
-          child: Column(
-            children: [
-              Form(
-                child: Column(
-                  children: [
-                    TextFormField(
-                      decoration: InputDecoration(
-                        label: Text('First name'),
-                        prefixIcon: Icon(Icons.person_2_rounded),
-                      ),
+    return AlertDialog(
+      content: Padding(
+        padding: EdgeInsets.all(12),
+        child: Column(
+          children: [
+            Form(
+              child: Column(
+                children: [
+                  TextFormField(
+                    decoration: InputDecoration(
+                      label: Text('First name'),
+                      prefixIcon: Icon(Icons.person_2_rounded),
                     ),
-                    SizedBox(
-                      height: 10,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      label: Text('First name'),
+                      prefixIcon: Icon(Icons.person_2_rounded),
                     ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        label: Text('First name'),
-                        prefixIcon: Icon(Icons.person_2_rounded),
-                      ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      label: Text('First name'),
+                      prefixIcon: Icon(Icons.person_2_rounded),
                     ),
-                    SizedBox(
-                      height: 10,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      label: Text('First name'),
+                      prefixIcon: Icon(Icons.person_2_rounded),
                     ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        label: Text('First name'),
-                        prefixIcon: Icon(Icons.person_2_rounded),
-                      ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      label: Text('First name'),
+                      prefixIcon: Icon(Icons.person_2_rounded),
                     ),
-                    SizedBox(
-                      height: 10,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      label: Text('First name'),
+                      prefixIcon: Icon(Icons.person_2_rounded),
                     ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        label: Text('First name'),
-                        prefixIcon: Icon(Icons.person_2_rounded),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        label: Text('First name'),
-                        prefixIcon: Icon(Icons.person_2_rounded),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        label: Text('First name'),
-                        prefixIcon: Icon(Icons.person_2_rounded),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 24,
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    height: 24,
+                  ),
+                ],
               ),
-              saveEditButton,
-              /*SizedBox(
-                width: double.infinity,
-                height: 60,
-                child: ElevatedButton(
-                  onPressed: () {
-                    saveEditButton;
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.amber.shade600,
-                    side: BorderSide.none,
-                    shape: StadiumBorder(),
-                  ),
-                  child: Text(
-                    "บันทึก",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),*/
-            ],
-          ),
+            ),
+            saveEditButton,
+
+          ],
         ),
       ),
     );

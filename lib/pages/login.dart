@@ -51,7 +51,7 @@ class _login_pageState extends State<login_page> {
         onSaved: (value) {
           emailController.text = value!;
         },
-        textInputAction: TextInputAction.next,
+        textInputAction: TextInputAction.none,
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.mail),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),

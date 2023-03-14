@@ -4,6 +4,7 @@ import 'package:duration_picker/duration_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -33,7 +34,7 @@ class _HomePageState extends State<HomePage> {
   _HomePageState({required this.restActivity});*/
   var FBS;
   DateTime dateTime = DateTime.now();
-  var dataName;
+  var dataName, lastname;
   var dataFbs;
   var id_user;
   var userage;
@@ -53,6 +54,7 @@ class _HomePageState extends State<HomePage> {
   bool loading = true;
   bool loadingFood = false;
   bool loadingActivity = false;
+  bool loadingName = true;
 
   void _onLoadingActivity() {
     setState(() {
@@ -159,11 +161,14 @@ class _HomePageState extends State<HomePage> {
     var restData2 = await pref.getString("FBS");
     var restId = await pref.getString("token");
     var restAge = await pref.getString("age");
+    var restLastname = await pref.getString("lastname");
+    loadingName = false;
     setState(() {
       dataName = restData;
       dataFbs = restData2;
       id_user = restId;
       userage = restAge;
+      lastname = restLastname;
     });
   }
   var number = 0;
@@ -240,34 +245,53 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Row(
-                        children: [
-                          InkWell(
-                            onTap: () async {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => profile_user()));
-                            },
-                            child: CircleAvatar(
-                              backgroundImage:
-                                  AssetImage('assets/images/girl.png'),
-                              radius: 60,
-                            ),
+                        children: [ loadingName? Center(child: CircularProgressIndicator(),):
+                          ProfilePicture(
+                            name: dataName + ' '+ lastname,
+                            radius: 60,
+                            fontsize: 30,
+                            random: false,
                           ),
                           Padding(
                             padding: EdgeInsets.all(8),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "สวัสดี!",
-                                  style: GoogleFonts.notoSerifThai(
-                                    textStyle: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 20,
+                                Row(
+                                  children: [
+                                    Text(
+                                      "สวัสดี!",
+                                      style: GoogleFonts.notoSerifThai(
+                                        textStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 20,
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    SizedBox(width: 125,),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(100),
+                                        color: Colors.white.withOpacity(0.3),
+                                      ),
+                                      child: IconButton(
+                                        icon: Icon(
+                                          LineAwesomeIcons.question_circle,
+                                          color: Colors.white,
+                                          size: 30,
+                                        ),
+                                        onPressed: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context){
+                                                return Guide();
+                                              }
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 Text(
                                   "คุณ ${dataName}",
@@ -304,9 +328,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
+
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
@@ -777,7 +799,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             activity_field(),
             SizedBox(height: 10),
-            timeToActivity_Field(),
+            timeToActivity_Field()
           ],
         ),
       ),
@@ -788,31 +810,38 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget activity_field() {
-    return DropdownButtonFormField(
-      validator: (value) => value == null ? "กรุณาเลือกกิจกรรม" : null,
-      onChanged: (String? newValue) {
-        setState(() {
-          activityEditingController.text = newValue!;
-        });
-      },
-      items: activity.map<DropdownMenuItem<String>>(
-        (String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        },
-      ).toList(),
-      decoration: InputDecoration(
-        prefixIcon: Icon(Icons.sports_volleyball),
-        contentPadding: EdgeInsets.fromLTRB(20, 5, 5, 10),
-        hintText: "กิจกรรม",
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+  Widget activity_field1() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        DropdownButtonFormField(
+          
+          menuMaxHeight: 300,
+          validator: (value) => value == null ? "กรุณาเลือกกิจกรรม" : null,
+          onChanged: (String? newValue) {
+            setState(() {
+              activityEditingController.text = newValue!;
+            });
+          },
+          items: activity.map<DropdownMenuItem<String>>(
+            (String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            },
+          ).toList(),
+          decoration: InputDecoration(
+            prefixIcon: Icon(Icons.sports_volleyball),
+            contentPadding: EdgeInsets.all(15),
+            hintText: "กิจกรรม",
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            //textInputAction: TextInputAction.next,
+          ),
         ),
-        //textInputAction: TextInputAction.next,
-      ),
+      ],
     );
   }
 
@@ -844,6 +873,40 @@ class _HomePageState extends State<HomePage> {
         } else {}
       },
     );
+  }
+
+  Widget activity_field() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          const Text('กิจกรรม',
+              style: TextStyle(fontWeight: FontWeight.bold)),
+          DropdownButtonFormField(
+            validator: (value) => value == null ? "กรุณาเลือกกิจกรรม" : null,
+            onChanged: (String? newValue) {
+              setState(() {
+                activityEditingController.text = newValue!;
+              });
+            },
+            items: activity.map<DropdownMenuItem<String>>(
+                  (String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              },
+            ).toList(),
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.fromLTRB(20, 5, 5, 10),
+              hintText: "กิจกรรม",
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black, width: 2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              //textInputAction: TextInputAction.next,
+            ),
+          ),
+        ]);
   }
 
   Widget cancelButton(BuildContext context) {
@@ -903,6 +966,136 @@ class _HomePageState extends State<HomePage> {
       style: ElevatedButton.styleFrom(
           primary: Colours.darkGreen,
           textStyle: TextStyle(fontWeight: FontWeight.bold)),
+    );
+  }
+  Widget Guide(){
+    return AlertDialog(
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('ตกลง'),
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green.shade700,
+              textStyle: TextStyle(fontWeight: FontWeight.bold)),
+        ),
+      ],
+      backgroundColor: Colours.beige,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15)),
+      title: Text(
+        'คำแนะนำ',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+      ),
+      buttonPadding: const EdgeInsets.only(right: 24),
+      elevation: 24.0,
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colours.snow,
+              ),
+              child: Column(
+                children: [
+                  Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Colors.black, //color of border
+                          width: 2, //width of border
+                        ),
+                      ),
+                      child: Image.asset(
+                          'assets/images/HomePageSugar.png')),
+                  Text('ค่าน้ำตาลมี 2 ช่อง ช่องแรกคือค่าน้ำตาลที่กินไป ช่องที่สองคือค่าน้ำตาลที่คงเหลือ คนเป็นเบาหวานควรกินน้ำตาลไม่เกิน 8 กรัม หรือ 2 ช้อนชา',
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),),
+                  Divider(height: 20,),
+                  Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Colors.black, //color of border
+                          width: 2, //width of border
+                        ),
+                      ),
+                      child: Image.asset('assets/images/HomePageAddAc.png')),
+                  Text('กล่องเพิ่มกิจกรรม มีกิจกรรมออกกำลังกาย และการกิน', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),),
+                  Divider(height: 20,),
+                  Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Colors.black, //color of border
+                          width: 2, //width of border
+                        ),
+                      ),
+                      child: Image.asset(
+                          'assets/images/homeFoodTodayZ.png')),
+                  Text('กิจกรรมการกินวันนี้ จะแสดงการกินที่เคยใส่ข้อมูลในวันนั้น ๆ', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),),
+                  Divider(height: 20,),
+                  Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Colors.black, //color of border
+                          width: 2, //width of border
+                        ),
+                      ),
+                      child: Image.asset(
+                          'assets/images/homeActivityTodayZ.png')),
+                  Text('กิจกรรมการออกกำลังกายวันนี้ จะแสดงการทำกิจกรรมออกกำลังการที่เคยใส่ข้อมูลในวันนั้น ๆ', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),),
+                  Divider(height: 20,),
+                  Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Colors.black, //color of border
+                          width: 2, //width of border
+                        ),
+                      ),
+                      child: Image.asset(
+                          'assets/images/homeInput.png')),
+                  Text(
+                    'ปุ่มใส่ข้อมูลการกิน', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),),
+                  Divider(height: 20,),
+                  Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Colors.black, //color of border
+                          width: 2, //width of border
+                        ),
+                      ),
+                      child: Image.asset(
+                          'assets/images/AddFoodUiZ.png')),
+                  Text(
+                    'ช่องเพิ่มการการกิน ทั้งแบบกรอกมือ และกรอกด้วยเสียงผ่านไมโครโฟน', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),),
+                  Divider(height: 20,),
+                  Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Colors.black, //color of border
+                          width: 2, //width of border
+                        ),
+                      ),
+                      child: Image.asset(
+                          'assets/images/advice.png')),
+                  Text(
+                    'ปุ่มคำแนะนำ จะอยู่ในหน้าต่างๆเพื่อแนะนำการใช้งานแอปพลิเคชัน', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),),
+                  Divider(height: 20,),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

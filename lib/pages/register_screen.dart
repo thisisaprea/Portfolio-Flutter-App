@@ -239,7 +239,7 @@ class _Register_screenState extends State<Register_screen> {
         },
       ).toList(),
       decoration: InputDecoration(
-        prefixIcon: Icon(Icons.transgender),
+        prefixIcon: Icon(Icons.work),
         contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: "อาชีพ",
         border: OutlineInputBorder(

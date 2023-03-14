@@ -70,6 +70,7 @@ dependencies:
   flutter_progress_hud: ^2.0.2
   custom_searchable_dropdown: ^2.1.1
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -109,6 +110,19 @@ flutter:
     - assets/images/gmail.png
     - assets/images/dish.png
     - assets/images/Logo.png
+    - assets/images/Textspeech.png
+    - assets/images/speechBotton.png
+    - assets/images/advice.png
+    - assets/images/homeActivityTodayZ.png
+    - assets/images/homeFoodTodayZ.png
+    - assets/images/homeInput.png
+    - assets/images/HomePageAddAc.png
+    - assets/images/HomePageSugar.png
+    - assets/images/AddFoodUiZ.png
+    - assets/images/selectMealrecZ.png
+    - assets/images/selectDateZ.png
+    - assets/images/Content-basedZ.png
+    - assets/images/CollaboretiveZ.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
