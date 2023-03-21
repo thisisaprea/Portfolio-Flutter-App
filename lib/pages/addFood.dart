@@ -3,7 +3,9 @@ import 'package:colours/colours.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:project_final/pages/SpeechToText.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -71,7 +73,7 @@ class _history_secondState extends State<history_second> {
   @override
   void initState() {
     super.initState();
-
+    mealAmountController.text = '1';
     getdataFood();
     _selectedCategory = categoryItems.elementAt(0);
     getdataUser();
@@ -196,7 +198,7 @@ class _history_secondState extends State<history_second> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text('Food', style: TextStyle(fontWeight: FontWeight.bold)),
+        Text('เมนูอาหาร', style: TextStyle(fontWeight: FontWeight.bold)),
         loading? Center(child: CircularProgressIndicator(),)
             :DropdownButtonFormField2(
           validator: (value) => value == null ? "กรุณาเลือกเมนู" : null,
@@ -275,25 +277,25 @@ class _history_secondState extends State<history_second> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('จำนวนมื้ออาหาร', style: TextStyle(fontWeight: FontWeight.bold)),
+        Text('จำนวนอาหาร', style: TextStyle(fontWeight: FontWeight.bold)),
         TextFormField(
           autofocus: false,
           controller: mealAmountController,
           keyboardType: TextInputType.number,
+          textInputAction: TextInputAction.none,
           validator: (value) {
             if (value!.isEmpty) {
-              return ("กรุณาใส่จำนวนมื้ออาหาร");
+              return ("กรุณาใส่จำนวนอาหาร");
             }
             return null;
           },
           onSaved: (value) {
             mealAmountController.text = value!;
           },
-          textInputAction: TextInputAction.next,
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.numbers),
             contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-            hintText: "จำนวนมื้ออาหาร",
+            hintText: "จำนวนอาหาร",
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.black, width: 2),
               borderRadius: BorderRadius.circular(10),
@@ -315,58 +317,6 @@ class _history_secondState extends State<history_second> {
       },
     );
   }
-  Widget _TimePicker(){
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('ใส่เวลาย้อนหลัง(ถ้ามี)', style: TextStyle(fontWeight: FontWeight.bold)),
-        TextFormField(
-          autofocus: false,
-          controller: timeEditingController,
-          validator: (value) {
-            if (value!.isEmpty) {
-              return ("");
-            }
-            return null;
-          },
-          onSaved: (value) {
-            timeEditingController.text = value!;
-          },
-          decoration: InputDecoration(
-            labelText: 'ใส่เวลาย้อนหลัง',
-            prefixIcon: Icon(LineAwesomeIcons.clock),
-            contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-            hintText: "เวลาย้อนหลัง",
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black, width: 2),
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          readOnly: true,
-          onTap: () async {
-            TimeOfDay? pickedTime = await showTimePicker(
-              context: context,
-              initialTime: time,
-            );
-            if (pickedTime != null) {
-              print(pickedTime);
-              String timeTrim = pickedTime.toString().substring(10,15);
-              print(timeTrim);
-              String date = DateFormat('dd/MM/yyyy').format(dateLast);
-              String formattedDate = DateFormat('ddMMyyyy').format(dateLast);
-              String dateAndtime = date + " " +timeTrim+':00';
-              print(date);
-              print(formattedDate);
-              print(dateAndtime);
-              setState(() {
-                timeEditingController.text = timeTrim; //set output date to TextField value.
-              });
-            } else {}
-          },
-        ),
-      ],
-    );
-  }
   Widget sugarField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -376,16 +326,20 @@ class _history_secondState extends State<history_second> {
           autofocus: false,
           controller: sugarEditingController,
           keyboardType: TextInputType.number,
+          textInputAction: TextInputAction.none,
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+          ],
           validator: (value) {
             if (value!.isEmpty) {
               return ("");
+            }else{
+              return null;
             }
-            return null;
           },
           onSaved: (value) {
             sugarEditingController.text = value!;
           },
-          textInputAction: TextInputAction.next,
           decoration: InputDecoration(
             prefixIcon: Icon(LineAwesomeIcons.utensil_spoon),
             contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),

@@ -3,6 +3,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:colours/colours.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
@@ -20,7 +21,7 @@ class SpeechToText extends StatefulWidget {
 class _SpeechToTextState extends State<SpeechToText> {
   bool _isListening = false;
   late stt.SpeechToText _speech;
-  String _text = 'กดปุ่มเพื่อพูดและกดปุ่มอีกครั้งเมื่อพูดเสร็จแล้ว';
+  String _text = 'กดปุ่มเพื่อพูดและกดปุ่มอีกครั้งเมื่อพูดเสร็จแล้ว\nมื้ออาหาร ชื่ออาหาร จำนวนอาหาร';
   double _confidence = 1.0;
   String? mealText, foodText, CountmealText;
 
@@ -56,12 +57,12 @@ class _SpeechToTextState extends State<SpeechToText> {
       title: Row(
         children: [
           Text(
-            'Speech To Text',
+            'พูดผ่านไมโครโฟน',
             textAlign: TextAlign.center,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
           SizedBox(
-            width: 70,
+            width: 40,
           ),
           Container(
             decoration: BoxDecoration(
@@ -164,6 +165,9 @@ class _SpeechToTextState extends State<SpeechToText> {
           autofocus: false,
           controller: sugarEditingController,
           keyboardType: TextInputType.number,
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+          ],
           validator: (value) {
             if (value!.isEmpty) {
               return ("");
@@ -329,8 +333,7 @@ class _SpeechToTextState extends State<SpeechToText> {
               btnOkOnPress: () {},
               btnOkColor: Colors.yellow.shade700,
             ).show();
-          }
-          ;
+          };
         }
       },
       child: Text('ตกลง'),

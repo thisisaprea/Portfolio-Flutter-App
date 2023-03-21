@@ -206,7 +206,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colours.lightGoldenRodYellow.withOpacity(0.8),
       //Colors.white54,
-      floatingActionButton: SizedBox(
+      /*floatingActionButton: SizedBox(
         width: 75,
         height: 75,
         child: FittedBox(
@@ -219,7 +219,7 @@ class _HomePageState extends State<HomePage> {
             child: Icon(Icons.add),
           ),
         ),
-      ),
+      ),*/
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

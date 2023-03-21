@@ -114,7 +114,7 @@ class _Register_screenState extends State<Register_screen> {
       onSaved: (value) {
         firstNameEditingController.text = value!;
       },
-      textInputAction: TextInputAction.next,
+      textInputAction: TextInputAction.none,
       decoration: InputDecoration(
         prefixIcon: Icon(Icons.account_circle),
         contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
@@ -141,7 +141,7 @@ class _Register_screenState extends State<Register_screen> {
       onSaved: (value) {
         lastNameEditingController.text = value!;
       },
-      textInputAction: TextInputAction.next,
+      textInputAction: TextInputAction.none,
       decoration: InputDecoration(
         prefixIcon: Icon(Icons.account_circle),
         contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
@@ -165,7 +165,7 @@ class _Register_screenState extends State<Register_screen> {
         onSaved: (value) {
           fbsEditingController.text = value!;
         },
-        textInputAction: TextInputAction.next,
+        textInputAction: TextInputAction.none,
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.bloodtype),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
@@ -187,7 +187,7 @@ class _Register_screenState extends State<Register_screen> {
         onSaved: (value) {
           weightEditingController.text = value!;
         },
-        textInputAction: TextInputAction.next,
+        textInputAction: TextInputAction.none,
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.monitor_weight_outlined),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
@@ -344,7 +344,7 @@ class _Register_screenState extends State<Register_screen> {
         onSaved: (value) {
           emailEditingController.text = value!;
         },
-        textInputAction: TextInputAction.next,
+        textInputAction: TextInputAction.none,
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.mail),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
@@ -373,7 +373,7 @@ class _Register_screenState extends State<Register_screen> {
         onSaved: (value) {
           userNameEditingController.text = value!;
         },
-        textInputAction: TextInputAction.next,
+        textInputAction: TextInputAction.none,
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.vpn_key),
           suffixIcon: IconButton(
@@ -438,11 +438,13 @@ class _Register_screenState extends State<Register_screen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
+                    SizedBox(height: 20),
                     Text(
                       'ลงทะเบียน',
                       style:
                           TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
+                    Divider(height: 20,),
                     Container(
                       padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(

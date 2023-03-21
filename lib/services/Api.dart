@@ -384,4 +384,21 @@ class Api {
       throw Exception('Failed.');
     }
   }
+  get_data_graph(uid) async{
+    final http.Response response = await http.post(
+      Uri.parse("http://10.0.2.2:8000/get_dataGraph/"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'uid': await uid,
+      }),
+    );
+    if (response.statusCode == 200) {
+      print(jsonDecode(response.body));
+      return (jsonDecode(response.body));
+    } else {
+      throw Exception('Failed.');
+    }
+  }
 }
