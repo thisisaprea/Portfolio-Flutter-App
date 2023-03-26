@@ -10,6 +10,7 @@ import 'package:easy_localization/easy_localization.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:intl/intl.dart';
 import 'package:multiple_search_selection/multiple_search_selection.dart';
@@ -92,6 +93,39 @@ class _Register_screenState extends State<Register_screen> {
       new TextEditingController();
   final TextEditingController menuEditingController =
       new TextEditingController();
+  DateTime _selectedYears = DateTime(2008);
+  var showYear;
+
+  selectYear(context) async {
+    print("Calling date picker");
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("เลือกปีเกิด (ปี ค.ศ.)"),
+          content: SizedBox(
+            width: 300,
+            height: 300,
+            child: YearPicker(
+              firstDate: DateTime(1940),
+              lastDate: DateTime(2008),
+              initialDate: DateTime.now(),
+              selectedDate: _selectedYears,
+              onChanged: (DateTime dateTime) {
+                print(dateTime.year);
+                setState(() {
+                  _selectedYears = dateTime;
+                  showYear = "${dateTime.year}";
+                  birthdayEditingController.text = showYear;
+                });
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -166,6 +200,9 @@ class _Register_screenState extends State<Register_screen> {
           fbsEditingController.text = value!;
         },
         textInputAction: TextInputAction.none,
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+        ],
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.bloodtype),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
@@ -188,6 +225,9 @@ class _Register_screenState extends State<Register_screen> {
           weightEditingController.text = value!;
         },
         textInputAction: TextInputAction.none,
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+        ],
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.monitor_weight_outlined),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
@@ -254,7 +294,7 @@ class _Register_screenState extends State<Register_screen> {
       controller: birthdayEditingController,
       validator: (value) {
         if (value!.isEmpty) {
-          return ("กรุณาใส่วันเกิด");
+          return ("กรุณาใส่ปีเกิด");
         }
         return null;
       },
@@ -262,31 +302,24 @@ class _Register_screenState extends State<Register_screen> {
         birthdayEditingController.text = value!;
       },
       decoration: InputDecoration(
-        labelText: 'กรุณาใส่วันเกิด',
+        labelText: 'กรุณาใส่ปีเกิด',
         prefixIcon: Icon(Icons.calendar_today_outlined),
         contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-        hintText: "วันเกิด",
+        hintText: "ปีเกิด (ค.ศ.)",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
       ),
       readOnly: true,
       onTap: () async {
-        DateTime? pickedDate = await showDatePicker(
-          context: context,
-          initialDate: DateTime.now(),
-          firstDate: DateTime(1940),
-          lastDate: DateTime.now(),
-        );
-        if (pickedDate != null) {
-          print(pickedDate);
-          String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
-          print(formattedDate);
+        selectYear(context);
+        if (showYear != null) {
+          print(showYear);
           setState(() {
             birthdayEditingController.text =
-                formattedDate; //set output date to TextField value.
+                showYear; //set output date to TextField value.
           });
-        } else {}
+        }
       },
     );
     //fev 5 foods
@@ -337,7 +370,7 @@ class _Register_screenState extends State<Register_screen> {
           // reg expression for email validation
           if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
               .hasMatch(value)) {
-            return ("กรุณาใส่อีเมลที่ถูกต้อง เช่น flutter@me.com");
+            return ("กรุณาใส่อีเมลที่ถูกต้องที่สามารถยืนยันตัวตนได้");
           }
           return null;
         },

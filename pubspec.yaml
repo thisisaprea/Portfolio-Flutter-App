@@ -70,6 +70,7 @@ dependencies:
   flutter_progress_hud: ^2.0.2
   custom_searchable_dropdown: ^2.1.1
   pattern_formatter: ^2.0.0
+  flutter_cupertino_date_picker_fork: ^1.0.7
 
 
 dev_dependencies:

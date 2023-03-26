@@ -2,14 +2,11 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:colours/colours.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
-import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:project_final/pages/profileEdit.dart';
 import 'package:project_final/services/Api.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../controller/check_User.dart';
 import 'login.dart';
 
@@ -30,12 +27,13 @@ class _profile_userState extends State<profile_user> {
   var weight;
   var job;
   var uid;
+  var firstnameNew,lastnameNew,fbsNew,weightNew,jobNew;
   final fNameEditingController = new TextEditingController();
   final lNameEditingController = new TextEditingController();
-  final emailEditingController = new TextEditingController();
   final weightEditingController = new TextEditingController();
   final jobEditingController = new TextEditingController();
   final fbsEditingController = new TextEditingController();
+
   late SharedPreferences pref;
   bool loading = false;
   bool updateUser = false;
@@ -71,8 +69,14 @@ class _profile_userState extends State<profile_user> {
       weight = restData6;
       job = restData5;
       uid = restDate7;
-
+      fNameEditingController.text = firstname;
+      lNameEditingController.text = lastname;
+      weightEditingController.text = weight;
+      jobEditingController.text = job;
+      fbsEditingController.text = fbs;
     });
+    print(fbsEditingController.text);
+    print(jobEditingController.text);
   }
 
   void _onLoading() {
@@ -81,7 +85,36 @@ class _profile_userState extends State<profile_user> {
       new Future.delayed(new Duration(seconds: 1), getdataUser);
     });
   }
-
+  Future refreshPage() async{
+      var uid = await pref.getString("token");
+      Api rest = await new Api();
+      var restApi = await rest.get_user(uid);
+      pref = await SharedPreferences.getInstance();
+      pref.setString("firstname",restApi["datauser"]["Firstname"]);
+      pref.setString("lastname",restApi["datauser"]["Lastname"]);
+      pref.setString("FBS",restApi["datauser"]["FBS"]);
+      pref.setString("job",restApi["datauser"]["Job"]);
+      pref.setString("weight",restApi["datauser"]["Weight"]);
+      var restData = await pref.getString("firstname");
+      var restData3 = await pref.getString("lastname");
+      var restData2 = await pref.getString("FBS");
+      var restData5 = await pref.getString("job");
+      var restData6 = await pref.getString("weight");
+      setState(() {
+        firstname = restData;
+        lastname = restData3;
+        job = restData5;
+        weight = restData6;
+        fbs = restData2;
+        print('### Refresh done! ###');
+        Navigator.of(context).pop();
+        print(firstname);
+        print(lastname);
+        print(weight);
+        print(job);
+        print(fbs);
+      });
+  }
   @override
   void initState() {
     super.initState();
@@ -508,7 +541,7 @@ class _profile_userState extends State<profile_user> {
                       validator: (value) {
                         RegExp regex = new RegExp(r'^.{3,}$');
                         if (value!.isEmpty) {
-                          return ("");
+                          return (fNameEditingController.text);
                         }
                         if (!regex.hasMatch(value)) {
                           return ("ชื่อผู้ใช้ต้องมีตัวอักษรอย่างน้อย 3 ตัวอักษร");
@@ -538,7 +571,7 @@ class _profile_userState extends State<profile_user> {
                           validator: (value) {
                             RegExp regex = new RegExp(r'^.{3,}$');
                             if (value!.isEmpty) {
-                              return ("");
+                              return (lNameEditingController.text);
                             }
                             if (!regex.hasMatch(value)) {
                               return ("นามสกุลต้องมีตัวอักษรอย่างน้อย 3 ตัวอักษร");
@@ -561,50 +594,22 @@ class _profile_userState extends State<profile_user> {
                         SizedBox(
                           height: 10,
                         ),
+
                         TextFormField(
                           autofocus: false,
-                          controller: emailEditingController,
-                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.none,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return ("");
-                            }
-                            // reg expression for email validation
-                            if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
-                                .hasMatch(value)) {
-                              return ("กรุณาใส่อีเมลที่ถูกต้อง เช่น flutter@me.com");
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            emailEditingController.text = value!;
-                          },
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.mail),
-                            contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-                            hintText: "E-mail",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            //textInputAction: TextInputAction.next,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TextFormField(
-                          autofocus: false,
-                          keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return ("");
+                              return (weightEditingController.text);
                             }
                             return null;
                           },
                           onSaved: (value) {
                             weightEditingController.text = value!;
                           },
-                          textInputAction: TextInputAction.none,
                           controller: weightEditingController,
                           decoration: InputDecoration(
                             prefixIcon: Icon(Icons.line_weight),
@@ -622,10 +627,11 @@ class _profile_userState extends State<profile_user> {
                     DropdownButtonFormField(
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return ("");
+                          return (jobEditingController.text);
                         }
                         return null;
                       },
+
                       onChanged: (String? newValue) {
                         setState(() {
                           jobEditingController.text = newValue!;
@@ -658,7 +664,7 @@ class _profile_userState extends State<profile_user> {
                           keyboardType: TextInputType.number,
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return ("");
+                              return (fbsEditingController.text);
                             }
                             return null;
                           },
@@ -666,6 +672,9 @@ class _profile_userState extends State<profile_user> {
                             fbsEditingController.text = value!;
                           },
                           textInputAction: TextInputAction.none,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
                           decoration: InputDecoration(
                             prefixIcon: Icon(Icons.bloodtype),
                             contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
@@ -692,40 +701,14 @@ class _profile_userState extends State<profile_user> {
     return ElevatedButton(
       onPressed: () async{
         Api rest = await new Api();
-        var restApi = await rest.update_user(uid, emailEditingController.text, fNameEditingController.text,
+        var restApi = await rest.update_user(uid, email, fNameEditingController.text,
             lNameEditingController.text, jobEditingController.text, weightEditingController.text, fbsEditingController.text);
         if(await restApi['message'] == 'update data success'){
+          print(email);
           print(fNameEditingController.text);
           print(weightEditingController.text);
           print(jobEditingController.text);
-          Api rest = await new Api();
-          var restApi = await rest.get_user(uid);
-          if(await restApi['message'] == 'success'){
-            pref = await SharedPreferences.getInstance();
-            pref.setString("firstname",restApi["datauser"]["Firstname"]);
-            pref.setString("lastname",restApi["datauser"]["Lastname"]);
-            pref.setString("email",restApi["datauser"]["Email"]);
-            pref.setString("FBS",restApi["datauser"]["FBS"]);
-            pref.setString("job",restApi["datauser"]["Job"]);
-            pref.setString("weight",restApi["datauser"]["Weight"]);
-            //var restDate7 = await pref.setString('token',restApi["datauser"]["Token"]);
-            var restData = await pref.getString("firstname");
-            var restData3 = await pref.getString("lastname");
-            var restData4 = await pref.getString("email");
-            var restData2 = await pref.getString("FBS");
-            var restData5 = await pref.getString("job");
-            var restData6 = await pref.getString("weight");
-            firstname = restData;
-            lastname = restData3;
-            email = restData4;
-            job = restData5;
-            weight = restData6;
-            fbs = restData2;
-            Navigator.of(context).pop();
-            print(firstname);
-            print(job);
-            print(fbs);
-          }
+          refreshPage();
         }
       },
       style: ElevatedButton.styleFrom(

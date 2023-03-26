@@ -19,7 +19,7 @@ class Api {
       body: jsonEncode(<String, String>{
         'firstname': await firstname,
         'lastname': await lastname,
-        'birthday': await birthday,
+        'birthday_year': await birthday,
         'job': await job,
         'weight': await weight,
         'fbs': await fbs,
@@ -396,6 +396,7 @@ class Api {
     );
     if (response.statusCode == 200) {
       print(jsonDecode(response.body));
+      print('------------End-----------');
       return (jsonDecode(response.body));
     } else {
       throw Exception('Failed.');
