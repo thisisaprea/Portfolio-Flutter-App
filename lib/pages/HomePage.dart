@@ -206,20 +206,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colours.lightGoldenRodYellow.withOpacity(0.8),
       //Colors.white54,
-      /*floatingActionButton: SizedBox(
-        width: 75,
-        height: 75,
-        child: FittedBox(
-          child: FloatingActionButton(
-            backgroundColor: Colours.darkGreen.shade400,
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => history_second(onFinish: addLastTime),
-            ),
-            child: Icon(Icons.add),
-          ),
-        ),
-      ),*/
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

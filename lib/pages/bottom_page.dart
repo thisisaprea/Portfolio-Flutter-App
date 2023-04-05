@@ -1,7 +1,6 @@
 import 'package:colours/colours.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:project_final/pages/FriendTextFields.dart';
 import 'package:project_final/pages/onBoading.dart';
 import 'package:project_final/pages/test.dart';
 import 'package:project_final/pages/testGraph.dart';
@@ -27,7 +26,7 @@ class _Bottom_PagesState extends State<Bottom_Pages> {
   final screens = [
     HomePage(),
     ItemList(),
-    Graph(),
+    history_today(),
     profile_user(),
   ];
 

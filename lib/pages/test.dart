@@ -2,12 +2,9 @@ import 'package:colours/colours.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:project_final/pages/FriendTextFields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
-
+import 'dart:async';
+import 'dart:math';
 import '../services/Api.dart';
 
 class test extends StatefulWidget {

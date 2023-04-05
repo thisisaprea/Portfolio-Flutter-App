@@ -597,6 +597,7 @@ class _profile_userState extends State<profile_user> {
 
                         TextFormField(
                           autofocus: false,
+                          keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.none,
                           inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),

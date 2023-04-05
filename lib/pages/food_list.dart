@@ -113,7 +113,6 @@ class _ItemListState extends State<ItemList> {
               Api restContentbased = await new Api();
               showContentbasedFood = await restContentbased.get_collaboretive(
                   restId, formattedDate, meal);
-
               setState(() {
                 loading = false;
                 titleFood.clear();
@@ -162,7 +161,7 @@ class _ItemListState extends State<ItemList> {
                         itemBuilder: (context, index) {
                           if (statusChoose == 'contentbased') {
                             colorBox = Colours.darkGreen.withOpacity(0.6);
-                          } else if (statusChoose == 'collaboretive') {
+                          } if (statusChoose == 'collaboretive') {
                             colorBox = Colours.cadetBlue;
                           } else {
                             colorBox = Colours.darkGreen.withOpacity(0.6);
@@ -269,7 +268,7 @@ class _ItemListState extends State<ItemList> {
             print('มื้อ $meal');
             print(titleFood);
           });
-        } else {
+        } if(statusChoose == 'collaboretive') {
           statusChoose = 'collaboretive';
           pref = await SharedPreferences.getInstance();
           String formattedDate = DateFormat('ddMMyyyy').format(dateTime);
