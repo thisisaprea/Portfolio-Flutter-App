@@ -24,6 +24,7 @@ class _history_todayState extends State<history_today> {
   var restListActivity, restList_;
   bool showDate = true;
   bool loading = false;
+  bool texttitle = false;
   var indexAppend = [];
   var listAppend;
   var titleActivity, titleFood;
@@ -50,7 +51,7 @@ class _history_todayState extends State<history_today> {
     _onLoading();
     getHistorydataUser();
     listChartData = [];
-    getGraphUser();
+    //getGraphUser();
   }
   void _onLoading() {
     setState(() {
@@ -73,6 +74,7 @@ class _history_todayState extends State<history_today> {
         titleActivity = listHistory['datafood'][0]['nameactivity'];
       } catch (e) {
         titleActivity = 'คุณยังไม่มีกิจกรรมวันนี้';
+        texttitle = true;
       }
       statusActivity = restListActivity;
       print(titleActivity);
@@ -84,7 +86,7 @@ class _history_todayState extends State<history_today> {
     });
   }
 
-  void getGraphUser() async {
+  /*void getGraphUser() async {
     Api restContent = await new Api();
     var pref = await SharedPreferences.getInstance();
     var restId = await pref.getString("token");
@@ -107,7 +109,7 @@ class _history_todayState extends State<history_today> {
       print(listChartData.length);
       print('111111111111111111111111111111111111');
     });
-  }
+  }*/
   late Color colorBar;
   List<BarChartGroupData> _chartGroups() {
     List<BarChartGroupData> list =
@@ -142,7 +144,7 @@ class _history_todayState extends State<history_today> {
     return list;
   }
 
-  SideTitles get _bottomTitles => SideTitles(
+ /* SideTitles get _bottomTitles => SideTitles(
       showTitles: true,
       getTitlesWidget: (value, meta) {
         String text = '';
@@ -175,7 +177,7 @@ class _history_todayState extends State<history_today> {
           text,
           style: TextStyle(fontSize: 15),
         );
-      });
+      });*/
   @override
   Widget build(BuildContext context) {
     final selectDateButton = ElevatedButton(
@@ -286,6 +288,7 @@ class _history_todayState extends State<history_today> {
                       ],
                     ),
                   ),
+                  texttitle? Center(child: Text(titleActivity),):
                   Flexible(
                     child: SingleChildScrollView(
                       child: Padding(
