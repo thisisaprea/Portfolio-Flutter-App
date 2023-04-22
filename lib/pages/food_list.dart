@@ -1,13 +1,10 @@
 import 'package:animated_button_bar/animated_button_bar.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:colours/colours.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/Api.dart';
-import 'onBoading.dart';
-
 class ItemList extends StatefulWidget {
   static const routeName = '/FoodItem';
 
@@ -122,7 +119,7 @@ class _ItemListState extends State<ItemList> {
               });
             },
             child: Text(
-              'Collaboretive',
+              'Collaborative',
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
             )),
       ],
@@ -130,7 +127,7 @@ class _ItemListState extends State<ItemList> {
     return Scaffold(
       backgroundColor: Colours.lightGoldenRodYellow.withOpacity(0.8),
       appBar: AppBar(
-          title: Text('แนะนำอาหาร'), backgroundColor: Colours.burntSienna),
+          title: Text('แนะนำอาหารมื้อถัดไป'), backgroundColor: Colours.burntSienna),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => showDialog(
           context: context,

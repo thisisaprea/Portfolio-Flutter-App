@@ -182,7 +182,7 @@ class _profile_userState extends State<profile_user> {
                 children: [
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height / 1.93,
+                    height: MediaQuery.of(context).size.height / 1.89,
                     decoration: BoxDecoration(
                       color: Colours.mediumPurple.withOpacity(0.4),
                       borderRadius: BorderRadius.only(
@@ -220,7 +220,7 @@ class _profile_userState extends State<profile_user> {
                                       fontSize: 20, color: Colors.black),
                                 ),
                                 SizedBox(
-                                  height: 10,
+                                  height: 5,
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(12.0),
@@ -251,10 +251,10 @@ class _profile_userState extends State<profile_user> {
                                     ],
                                   ),
                                 ),
-                                Divider(height: 5,),
+                                SizedBox(height: 5,),
                                 SizedBox(
-                                  width: 140,
-                                  height: 55,
+                                  width: 130,
+                                  height: 40,
                                   child: ElevatedButton(
                                     onPressed: () => showDialog(
                                       context: context,
@@ -527,7 +527,7 @@ class _profile_userState extends State<profile_user> {
             var heigth = MediaQuery.of(context).size.height;
             var width = MediaQuery.of(context).size.width;
             return Container(
-              height: heigth - 460,
+              height: heigth - 446,
               width: width - 5,
               child: Column(
                 children: [

@@ -9,13 +9,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:project_final/pages/bottom_page.dart';
-import 'package:project_final/pages/history_daily.dart';
 import 'package:project_final/services/Api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/last_time.dart';
-import '../widgets/ConsultationCard.dart';
-import 'Profile_Page.dart';
-import 'history.dart';
 import 'addFood.dart';
 
 class HomePage extends StatefulWidget {
@@ -255,7 +251,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 125,),
+                                    SizedBox(width: 110,),
                                     Container(
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(100),
@@ -314,15 +310,14 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(5.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              height: 105,
-                              width: 165,
+                              height: 100,
+                              width: 160,
                               decoration: BoxDecoration(
                                 border: Border.all(
                                   color: Colors.black, //color of border
@@ -342,7 +337,7 @@ class _HomePageState extends State<HomePage> {
                                         textStyle: TextStyle(
                                           color: Colors.black.withOpacity(0.8),
                                           fontWeight: FontWeight.w400,
-                                          fontSize: 20,
+                                          fontSize: 17,
                                         ),
                                       ),
                                     ),
@@ -362,11 +357,11 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             SizedBox(
-                              width: 15,
+                              width: 10,
                             ),
                             Container(
-                              height: 105,
-                              width: 165,
+                              height: 100,
+                              width: 160,
                               decoration: BoxDecoration(
                                 border: Border.all(
                                   color: Colors.black, //color of border
@@ -386,7 +381,7 @@ class _HomePageState extends State<HomePage> {
                                         textStyle: TextStyle(
                                           color: Colors.black.withOpacity(0.8),
                                           fontWeight: FontWeight.w400,
-                                          fontSize: 20,
+                                          fontSize: 17,
                                         ),
                                       ),
                                     ),

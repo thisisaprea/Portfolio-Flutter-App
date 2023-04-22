@@ -143,11 +143,11 @@ class _history_secondState extends State<history_second> {
                       ),
                       child: micButton(context)),
                   SizedBox(
-                    width: 24,
+                    width: 20,
                   ),
                   cancelButton(context),
                   SizedBox(
-                    width: 10,
+                    width: 8,
                   ),
                   addButton(context, isEditing: isEditing),
                 ],
@@ -343,7 +343,7 @@ class _history_secondState extends State<history_second> {
           decoration: InputDecoration(
             prefixIcon: Icon(LineAwesomeIcons.utensil_spoon),
             contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-            hintText: "ค่าน้ำตาลที่ปรุง(ช้อนชา)",
+            hintText: "คุณใส่น้ำตาลกี่ช้อนชา?",
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.black, width: 2),
               borderRadius: BorderRadius.circular(10),

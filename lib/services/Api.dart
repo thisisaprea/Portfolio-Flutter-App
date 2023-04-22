@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 
 class Api {
   var path = "http://10.0.2.2:8000/";
+  var path1 = "http://172.20.10.3:58634/";
 
   Api() {}
 
@@ -44,8 +45,7 @@ class Api {
     print(password);
     print(id_device);
     if(email.toString().isNotEmpty && password.toString().isNotEmpty){
-      final http.Response response = await http.post(
-        Uri.parse("http://10.0.2.2:8000/login/"),
+      final http.Response response = await http.post(Uri.parse("http://10.0.2.2:8000/login/"),
         headers: <String, String>{
           "Access-Control-Allow-Origin": "*",
           'Content-Type': 'application/json',
