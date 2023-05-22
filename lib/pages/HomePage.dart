@@ -11,7 +11,6 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:project_final/pages/bottom_page.dart';
 import 'package:project_final/services/Api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../services/last_time.dart';
 import 'addFood.dart';
 
 class HomePage extends StatefulWidget {
@@ -182,19 +181,6 @@ class _HomePageState extends State<HomePage> {
     print('-----------------------------------');
     print(loading.toString());
     print('-----------------------------------');
-  }
-
-  @override
-  Future addLastTime(String food, String category) async {
-    final lastTime = LastTime()
-      ..food = food
-      ..category = category
-      ..createdDate = DateTime.now()
-      ..timeStamp.add(DateTime.now());
-
-    final box = Hive.box<LastTime>('lastTimes');
-    box.add(lastTime);
-    print('$box, $lastTime');
   }
 
   @override
@@ -480,7 +466,7 @@ class _HomePageState extends State<HomePage> {
                                 OutlinedButton(
                                   onPressed: () => showDialog(
                                     context: context,
-                                    builder: (context) => history_second(onFinish: addLastTime),
+                                    builder: (context) => history_second(),
                                   ),
                                   style: ButtonStyle(
                                     foregroundColor:

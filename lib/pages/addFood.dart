@@ -10,19 +10,10 @@ import 'package:project_final/pages/SpeechToText.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/Api.dart';
-import '../services/last_time.dart';
 import 'bottom_page.dart';
 
 class history_second extends StatefulWidget {
   static const routeName = '/history_second';
-  final LastTime? lastTime;
-  final Function onFinish;
-
-  history_second({
-    Key? key,
-    this.lastTime,
-    required this.onFinish,
-  }) : super(key: key);
 
   @override
   _history_secondState createState() => _history_secondState();
@@ -81,8 +72,6 @@ class _history_secondState extends State<history_second> {
 
   @override
   Widget build(BuildContext context) {
-    final isEditing = widget.lastTime != null;
-    final title = isEditing ? 'Edit LastTime' : 'Add LastTime';
     return SingleChildScrollView(
       child: Center(
         child: AlertDialog(
@@ -149,7 +138,6 @@ class _history_secondState extends State<history_second> {
                   SizedBox(
                     width: 8,
                   ),
-                  addButton(context, isEditing: isEditing),
                 ],
               ),
             ),
