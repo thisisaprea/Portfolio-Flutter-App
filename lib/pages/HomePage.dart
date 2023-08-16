@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive/hive.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:project_final/pages/bottom_page.dart';
 import 'package:project_final/services/Api.dart';
@@ -395,7 +394,9 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
+              //------------------end head------------------
               Divider(color: Colors.black54, thickness: 1,),
+              //-------------------add ativity-----------------
               Padding(
                 padding: EdgeInsets.all(8),
                 child: Container(
@@ -504,6 +505,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
+              //-------------------end add activity------------------
               /*InkWell(
                 onTap: () async {
                   print(showAcitivityFood);
@@ -573,6 +575,7 @@ class _HomePageState extends State<HomePage> {
               Container(
                 child: Column(
                   children: [
+                    //-------------------------food activity----------------------
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: loadingFood? Center(child: CircularProgressIndicator(),):
@@ -655,7 +658,9 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
+                    //-------------------------end food activity----------------------
                     SizedBox(height: 10,),
+                    //-------------------------daily activity----------------------
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: loadingActivity? Center(child: CircularProgressIndicator(),):
@@ -736,6 +741,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
+                    //-------------------------end daily activity----------------------
                   ],
                 ),
               ),

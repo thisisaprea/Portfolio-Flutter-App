@@ -1,6 +1,5 @@
 import 'package:colours/colours.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -56,7 +55,7 @@ class _history_todayState extends State<history_today> {
   void _onLoading() {
     setState(() {
       loading = true;
-      new Future.delayed(new Duration(seconds: 2), getHistorydataUser);
+      new Future.delayed(new Duration(seconds: 1), getHistorydataUser);
     });
   }
 
@@ -71,7 +70,8 @@ class _history_todayState extends State<history_today> {
     setState(() {
       try {
         listHistory = restListActivity['data_history'][0];
-        titleActivity = listHistory['datafood'][0]['nameactivity'];
+        //titleActivity = listHistory['datafood'][0]['nameactivity'];
+        texttitle = false;
       } catch (e) {
         titleActivity = 'คุณยังไม่มีกิจกรรมวันนี้';
         texttitle = true;
@@ -86,98 +86,7 @@ class _history_todayState extends State<history_today> {
     });
   }
 
-  /*void getGraphUser() async {
-    Api restContent = await new Api();
-    var pref = await SharedPreferences.getInstance();
-    var restId = await pref.getString("token");
-    restList_ = await restContent.get_data_graph(restId);
-    setState(() {
-      for (var i in restList_['datauser']) {
-        indexAppendGraph.add(i);
-      }
-      print(indexAppendGraph);
-      print('-------------------------');
-      print(restList_['datauser'].length);
-      print('11111111bbbbbbbbbbbbbbb111111111');
-      for (int i = 0; i < restList_['datauser'].length - 1; i++) {
-        listChartData.add(DataList(
-            date: indexAppendGraph[i]['date'].toString().substring(0, 5),
-            sugar: double.parse(
-                indexAppendGraph[i]['sumdate_sugar'].toStringAsFixed(2))));
-        //DataList(date: indexAppend[i]['date'], sugar: indexAppend[i]['sumdate_sugar'].toStringAsFixed(2)),
-      }
-      print(listChartData.length);
-      print('111111111111111111111111111111111111');
-    });
-  }*/
-  late Color colorBar;
-  List<BarChartGroupData> _chartGroups() {
-    List<BarChartGroupData> list =
-        List<BarChartGroupData>.empty(growable: true);
-    for (int i = 0; i < listChartData.length - 5; i++) {
-      if (listChartData[i].sugar <= 8) {
-        colorBar = Colours.darkSeagreen.shade700;
-      } else {
-        colorBar = Colours.lightCoral;
-      }
-      list.add(
-        BarChartGroupData(
-          x: i,
-          barRods: [
-            BarChartRodData(
-              toY: listChartData[i].sugar,
-              color: colorBar,
-              width: 25,
-              borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(10), topLeft: Radius.circular(10)),
-              backDrawRodData: BackgroundBarChartRodData(
-                show: true,
-                toY: 30,
-                color: Colors.white54,
-              ),
-            ),
-          ],
-        ),
-      );
-      print(listChartData[i].sugar);
-    }
-    return list;
-  }
 
- /* SideTitles get _bottomTitles => SideTitles(
-      showTitles: true,
-      getTitlesWidget: (value, meta) {
-        String text = '';
-        switch (value.toInt()) {
-          case 0:
-            text = 'จ.';
-            break;
-          case 1:
-            text = 'อ.';
-            break;
-          case 2:
-            text = 'พ.';
-            break;
-          case 3:
-            text = 'พฤ.';
-            break;
-          case 4:
-            text = 'ศ.';
-            break;
-          case 5:
-            text = 'ส.';
-            break;
-          case 6:
-            text = 'อ.';
-            break;
-          default:
-            throw Error();
-        }
-        return Text(
-          text,
-          style: TextStyle(fontSize: 15),
-        );
-      });*/
   @override
   Widget build(BuildContext context) {
     final selectDateButton = ElevatedButton(
@@ -197,10 +106,12 @@ class _history_todayState extends State<history_today> {
             print(formatEnd);
           });
         }
+
         Api restContent = await new Api();
         pref = await SharedPreferences.getInstance();
         var restId = await pref.getString("token");
         showDate = false;
+        texttitle = false;
         restListActivity =
             await restContent.get_history(restId, formatStart, formatEnd);
         setState(() {

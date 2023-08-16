@@ -5,7 +5,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:project_final/pages/SpeechToText.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -138,6 +137,7 @@ class _history_secondState extends State<history_second> {
                   SizedBox(
                     width: 8,
                   ),
+                  addButton(context)
                 ],
               ),
             ),
@@ -354,7 +354,7 @@ class _history_secondState extends State<history_second> {
     );
   }
 
-  Widget addButton(BuildContext context, {required bool isEditing}) {
+  Widget addButton(BuildContext context) {
     final text = 'ตกลง';
     return ElevatedButton(
       child: Text(text),
